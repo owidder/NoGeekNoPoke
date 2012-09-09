@@ -43,11 +43,11 @@
 {
 	// Removes the CCMotionStreak and creates a new one.
 	[self removeChildByTag:StreakLayerTagMotionStreak cleanup:YES];
-	CCMotionStreak* streak = [CCMotionStreak streakWithFade:0.99f 
-													 minSeg:8
-													  width:32 
+	CCMotionStreak* streak = [CCMotionStreak streakWithFade:20.0f
+													 minSeg:5
+													  width:30
 													  color:ccc3(255, 0, 255)
-											textureFilename:@"firething.png"];
+											textureFilename:@"motionstreak2.png"];
 	[self addChild:streak z:5 tag:StreakLayerTagMotionStreak];
 	
 	// changing the blend func can create nice effects
@@ -97,7 +97,7 @@
 
 -(void) ccTouchEnded:(UITouch*)touch withEvent:(UIEvent *)event
 {
-	[self resetMotionStreak];
+	// [self resetMotionStreak];
 }
 #endif
 
