@@ -84,6 +84,7 @@
 
 -(BOOL) ccTouchBegan:(UITouch*)touch withEvent:(UIEvent *)event
 {
+    [self resetMotionStreak];
 	[self moveMotionStreakToTouch:touch];
 	
 	// Always swallow touches.
@@ -97,20 +98,13 @@
 
 -(void) ccTouchEnded:(UITouch*)touch withEvent:(UIEvent *)event
 {
-	// [self resetMotionStreak];
+    CCMotionStreak* streak = [self getMotionStreak];
+    [streak runAction:[CCFadeOut actionWithDuration:5.0f]];
 }
 #endif
 
 -(void) update:(ccTime)delta
 {
-#if KK_PLATFORM_MAC
-	KKInput* input = [KKInput sharedInput];
-	if ([input isMouseButtonDown:KKMouseButtonLeft])
-	{
-		CCMotionStreak* streak = [self getMotionStreak];
-		streak.position = input.mouseLocation;
-	}
-#endif
 }
 
 @end
