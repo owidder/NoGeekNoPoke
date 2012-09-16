@@ -6,14 +6,17 @@
 //
 
 #import "cocos2d.h"
+#import "chipmunk.h"
 
 typedef enum
 {
-	StreakLayerTagMotionStreak
+	kTagMotionStreak,
+    kTagParticleSystem
 } StreakLayerTags;
 
 @interface StreakLayer : CCLayer
 {
+    cpSpace *space;
 }
 
 +(id) scene;
