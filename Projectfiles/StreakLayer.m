@@ -7,6 +7,8 @@
 
 #import "StreakLayer.h"
 
+#import "CGPointExtension.h"
+
 static int playerCtr = 0;
 
 // C callback method that updates sprite position and rotation:
@@ -17,11 +19,16 @@ static void forEachShape(cpShape* shape, void* data)
 	{
 		cpBody* body = shape->body;
 		sprite.position = body->p;
-		sprite.rotation = CC_RADIANS_TO_DEGREES(body->a) * -1;
+//		sprite.rotation = CC_RADIANS_TO_DEGREES(body->a) * -1;
 	}
 }
 
 @interface StreakLayer ()
+{
+    CGPoint touchStart;
+    NSTimeInterval startTime;
+}
+
 -(void) resetMotionStreak;
 -(CCMotionStreak*) getMotionStreak;
 -(void) addNewPlayerAt:(CGPoint)pos;
@@ -41,9 +48,11 @@ static void forEachShape(cpShape* shape, void* data)
 {
 	if ((self = [super init]))
 	{
+        touchStart = CGPointZero;
+        
 		space = cpSpaceNew();
 		space->iterations = 8;
-		space->gravity = CGPointMake(0, -200);
+//		space->gravity = CGPointMake(0, -200);
 		
 		// Add the collision handlers
         //		unsigned int defaultCollisionType = 0;
@@ -165,7 +174,7 @@ static void forEachShape(cpShape* shape, void* data)
 }
 
 
--(void) addNewPlayerAt:(CGPoint)pos
+-(void) addNewPlayerAt:(CGPoint)pos withForce:(CGPoint)force
 {
 	float mass = 5.5f;
 	float moment = cpMomentForCircle(mass, 10, 10, CGPointZero);
@@ -182,6 +191,8 @@ static void forEachShape(cpShape* shape, void* data)
 	shape->u = friction;
 	shape->data = (__bridge void*)[self addParticleSystemAt:pos];
 	cpSpaceAddShape(space, shape);
+    
+    cpBodyApplyImpulse(body, force, CGPointZero);
 }
 
 -(CCMotionStreak*) getMotionStreak
@@ -214,6 +225,9 @@ static void forEachShape(cpShape* shape, void* data)
 {
     [self resetMotionStreak];
 	[self moveMotionStreakToTouch:touch];
+    
+    touchStart = [self locationFromTouch:touch];
+    startTime = event.timestamp;
 	
 	// Always swallow touches.
 	return YES;
@@ -226,8 +240,17 @@ static void forEachShape(cpShape* shape, void* data)
 
 -(void) ccTouchEnded:(UITouch*)touch withEvent:(UIEvent *)event
 {
+    CGPoint touchEnd = [self locationFromTouch:touch];
+    CGPoint delta = ccpSub(touchEnd, touchStart);
+    
+    NSTimeInterval endTime = event.timestamp;
+    double deltaTime = endTime - startTime;
+    
+    
+    CGPoint force = ccpMult(delta, 1 / deltaTime);
+    
     [self resetMotionStreak];
-    [self addNewPlayerAt:[self locationFromTouch:touch]];
+    [self addNewPlayerAt:[self locationFromTouch:touch] withForce:force];
 }
 #endif
 
