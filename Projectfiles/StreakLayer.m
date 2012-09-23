@@ -31,7 +31,8 @@ static void forEachShape(cpShape* shape, void* data)
 
 -(void) resetMotionStreak;
 -(CCMotionStreak*) getMotionStreak;
--(void) addNewPlayerAt:(CGPoint)pos;
+-(void) addNewPlayerAt:(CGPoint)pos withForce:(CGPoint)force;
+-(CCParticleSystem*) addParticleSystemAt:(CGPoint)pos;
 @end
 
 @implementation StreakLayer
@@ -247,38 +248,44 @@ static void forEachShape(cpShape* shape, void* data)
     double deltaTime = endTime - startTime;
     
     
-    CGPoint force = ccpMult(delta, 1 / deltaTime);
+    CGPoint force = ccpAdd(touchEnd, ccpMult(delta, 1 / deltaTime));
     
     [self resetMotionStreak];
     [self addNewPlayerAt:[self locationFromTouch:touch] withForce:force];
+    
+    CGPoint arrow = ccpAdd(touchEnd, delta);
+    CCSprite *circle = [CCSprite spriteWithFile:@"fire.png"];
+    circle.position = touchEnd;
+    [self addChild:circle];
+    [circle runAction:[CCMoveTo actionWithDuration:0.1 position:arrow]];
 }
 #endif
 
 -(void) update:(ccTime)delta
 {
-	CCDirector* director = [CCDirector sharedDirector];
-	if (director.currentPlatformIsIOS)
-	{
-		KKInput* input = [KKInput sharedInput];
-		if (director.currentDeviceIsSimulator == NO)
-		{
-			KKAcceleration* acceleration = input.acceleration;
-			space->gravity = cpv(500.0f * acceleration.rawX, 500.0f * acceleration.rawY);
-		}
-		
-		if (input.anyTouchEndedThisFrame)
-		{
-			[self addNewPlayerAt:[input locationOfAnyTouchInPhase:KKTouchPhaseEnded]];
-		}
-	}
-	else if (director.currentPlatformIsMac)
-	{
-		KKInput* input = [KKInput sharedInput];
-		if (input.isAnyMouseButtonUpThisFrame || CGPointEqualToPoint(input.scrollWheelDelta, CGPointZero) == NO)
-		{
-			[self addNewPlayerAt:input.mouseLocation];
-		}
-	}
+//	CCDirector* director = [CCDirector sharedDirector];
+//	if (director.currentPlatformIsIOS)
+//	{
+//		KKInput* input = [KKInput sharedInput];
+//		if (director.currentDeviceIsSimulator == NO)
+//		{
+//			KKAcceleration* acceleration = input.acceleration;
+//			space->gravity = cpv(500.0f * acceleration.rawX, 500.0f * acceleration.rawY);
+//		}
+//		
+//		if (input.anyTouchEndedThisFrame)
+//		{
+//			[self addNewPlayerAt:[input locationOfAnyTouchInPhase:KKTouchPhaseEnded]];
+//		}
+//	}
+//	else if (director.currentPlatformIsMac)
+//	{
+//		KKInput* input = [KKInput sharedInput];
+//		if (input.isAnyMouseButtonUpThisFrame || CGPointEqualToPoint(input.scrollWheelDelta, CGPointZero) == NO)
+//		{
+//			[self addNewPlayerAt:input.mouseLocation];
+//		}
+//	}
 	
 	float timeStep = 0.03f;
 	cpSpaceStep(space, timeStep);
