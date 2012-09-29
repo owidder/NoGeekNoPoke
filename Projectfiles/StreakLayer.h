@@ -11,8 +11,13 @@
 typedef enum
 {
 	kTagMotionStreak,
-    kTagParticleSystem
+    kTagPlayer
 } StreakLayerTags;
+
+typedef enum {
+    kRunning,
+    kIdle
+} GameMode;
 
 @interface StreakLayer : CCLayer
 {

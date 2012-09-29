@@ -9,34 +9,65 @@
 
 #import "CGPointExtension.h"
 
-static int playerCtr = 0;
-
 // C callback method that updates sprite position and rotation:
 static void forEachShape(cpShape* shape, void* data)
 {
-	CCSprite* sprite = (__bridge CCSprite*)shape->data;
-	if (sprite != nil)
-	{
-		cpBody* body = shape->body;
-		sprite.position = body->p;
-//		sprite.rotation = CC_RADIANS_TO_DEGREES(body->a) * -1;
-	}
+    if(shape != nil) {
+        CCSprite* sprite = (__bridge CCSprite*)shape->data;
+        if (sprite != nil)
+        {
+            cpBody* body = shape->body;
+            sprite.position = body->p;
+            //		sprite.rotation = CC_RADIANS_TO_DEGREES(body->a) * -1;
+        }
+    }
 }
 
 @interface StreakLayer ()
 {
+    // the one and only player at a time
+    cpBody *playerBody;
+    cpShape *playerShape;
+    CCParticleSystem *playerNode;
+    
+    // the last players position to detect
+    // whether has has moved since
+    CGPoint lastPlayerPosition;
+    
+    // needed to detect, whether the player has moved
+    // only checked, when the counter has reached a certain number
+    // e.g.: check every second: number = 60
+    int detectionCounter;
+    
+    // the position where a touch has started
     CGPoint touchStart;
+    
+    // the time when a touch has started
     NSTimeInterval startTime;
+    
+    // when the game is in running mode
+    // no new player can be created
+    GameMode gameMode;
 }
 
 -(void) resetMotionStreak;
--(CCMotionStreak*) getMotionStreak;
--(void) addNewPlayerAt:(CGPoint)pos withForce:(CGPoint)force;
+-(CCMotionStreak*) currentMotionStreak;
+-(void) addNewPlayerAt:(CGPoint)pos withImpulse:(CGPoint)impulse;
 -(CCParticleSystem*) addParticleSystemAt:(CGPoint)pos;
+-(void) moveMotionStreakToTouch:(UITouch*)touch;
+-(CGPoint) locationFromTouch:(UITouch*)touch;
+-(void) stopRunningMode;
+-(void) createTheSuns;
 @end
 
 @implementation StreakLayer
 
+#pragma mark -
+#pragma mark static helper methods
+
+/**
+ Create a CCScene and add this layer as a child
+ */
 +(id) scene
 {
 	CCScene* scene = [CCScene node];
@@ -44,6 +75,8 @@ static void forEachShape(cpShape* shape, void* data)
 	[scene addChild:layer];
 	return scene;
 }
+
+#pragma mark NSObject
 
 -(id) init
 {
@@ -101,10 +134,12 @@ static void forEachShape(cpShape* shape, void* data)
 		shape->u = friction;
 		cpSpaceAddStaticShape(space, shape);
 		
-        CCNode *particleNode = [CCNode node];
-        [self addChild:particleNode z:0 tag:kTagParticleSystem];
+//        CCNode *particleNode = [CCNode node];
+//        [self addChild:particleNode z:0 tag:kTagParticleSystem];
 		
-		[KKInput sharedInput].accelerometerActive = YES;
+//		[KKInput sharedInput].accelerometerActive = YES;
+        
+        gameMode = kIdle;
         
 		self.isTouchEnabled = YES;
 		[self resetMotionStreak];
@@ -123,40 +158,57 @@ static void forEachShape(cpShape* shape, void* data)
 #endif
 }
 
--(CCParticleSystem*) addParticleSystemAt:(CGPoint)pos
+#pragma mark private methods
+
+/**
+ Create the suns who are applying a constant force on the player
+ */
+-(void) createTheSuns
 {
-    CCNode *particleNode = (CCNode*) [self getChildByTag:kTagParticleSystem];
-    
-    CCParticleSystemQuad *psq;
-    
-    switch (playerCtr++) {
-        case 0:
-            psq = [CCParticleSystemQuad particleWithFile:@"playerBlue.plist"];
-            break;
-            
-        case 1:
-            psq = [CCParticleSystemQuad particleWithFile:@"playerRed.plist"];
-            break;
-            
-        case 2:
-            psq = [CCParticleSystemQuad particleWithFile:@"playerGreen.plist"];
-            playerCtr = 0;
-            break;
-            
-        default:
-            psq = [CCParticleSystemQuad particleWithFile:@"playerBlue.plist"];
-            playerCtr = 1;
-            break;
-    }
-    
-    
-    psq.position = pos;
-    
-    [particleNode addChild:psq];
-    
-    return psq;
 }
 
+/**
+ Remove the node given as userdata
+ */
+-(void) removeNode:(NSTimer*)timer
+{
+    CCNode *node = (CCNode*) timer.userInfo;
+    [self removeChild:node cleanup:YES];
+    [timer invalidate];
+}
+
+/**
+ Stop the running mode:
+ - Remove the player
+ */
+-(void) stopRunningMode {
+    cpSpaceRemoveShape(space, playerShape);
+    cpSpaceRemoveBody(space, playerBody);
+    cpShapeFree(playerShape);
+    cpBodyFree(playerBody);
+    
+    [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(removeNode:) userInfo:playerNode repeats:NO];
+    
+    gameMode = kIdle;
+}
+
+/**
+ Add a new 'player.plist' partice system at the given position
+ */
+-(CCParticleSystem*) addParticleSystemAt:(CGPoint)pos
+{
+    CCParticleSystemQuad *psq;
+    playerNode = [CCParticleSystemQuad particleWithFile:@"player.plist"];
+    playerNode.position = pos;
+    
+    [self addChild:playerNode z:0 tag:kTagPlayer];
+    
+    return playerNode;
+}
+
+/**
+ Kill the current and create a new CCMotionStreak
+ */
 -(void) resetMotionStreak
 {
 	// Removes the CCMotionStreak and creates a new one.
@@ -174,29 +226,39 @@ static void forEachShape(cpShape* shape, void* data)
 	streak.blendFunc = (ccBlendFunc){GL_ONE, GL_ONE};
 }
 
-
--(void) addNewPlayerAt:(CGPoint)pos withForce:(CGPoint)force
+/**
+ Create a new player at the given position and immediately apply the given force
+ */
+-(void) addNewPlayerAt:(CGPoint)pos withImpulse:(CGPoint)impulse
 {
 	float mass = 5.5f;
 	float moment = cpMomentForCircle(mass, 10, 10, CGPointZero);
-	cpBody* body = cpBodyNew(mass, moment);
+	playerBody = cpBodyNew(mass, moment);
 	
-	body->p = pos;
-	cpSpaceAddBody(space, body);
-	
-	float elasticity = 0.9f;
-	float friction = 0.7f;
-	
-    cpShape *shape = cpCircleShapeNew(body, 10, CGPointZero);
-	shape->e = elasticity;
-	shape->u = friction;
-	shape->data = (__bridge void*)[self addParticleSystemAt:pos];
-	cpSpaceAddShape(space, shape);
+    lastPlayerPosition = pos;
+    detectionCounter = 0;
     
-    cpBodyApplyImpulse(body, force, CGPointZero);
+	playerBody->p = pos;
+	cpSpaceAddBody(space, playerBody);
+	
+	float elasticity = 0.5f;
+	float friction = 0.2f;
+	
+    playerShape = cpCircleShapeNew(playerBody, 10, CGPointZero);
+	playerShape->e = elasticity;
+	playerShape->u = friction;
+	playerShape->data = (__bridge void*)[self addParticleSystemAt:pos];
+	cpSpaceAddShape(space, playerShape);
+    
+    cpBodyApplyImpulse(playerBody, impulse, CGPointMake(5, 5));
+    
+    gameMode = kRunning;
 }
 
--(CCMotionStreak*) getMotionStreak
+/**
+ get the current CCMotionStreak
+ */
+-(CCMotionStreak*) currentMotionStreak
 {
 	CCNode* node = [self getChildByTag:kTagMotionStreak];
 	NSAssert([node isKindOfClass:[CCMotionStreak class]], @"node is not a CCMotionStreak");
@@ -204,22 +266,29 @@ static void forEachShape(cpShape* shape, void* data)
 	return (CCMotionStreak*)node;
 }
 
-#if KK_PLATFORM_IOS
--(void) registerWithTouchDispatcher
+/**
+ Move the current CCMotionStreak to the position of the given UITouch
+ */
+-(void) moveMotionStreakToTouch:(UITouch*)touch
 {
-	[[CCDirector sharedDirector].touchDispatcher addTargetedDelegate:self priority:0 swallowsTouches:YES];
+	CCMotionStreak* streak = [self currentMotionStreak];
+	streak.position = [self locationFromTouch:touch];
 }
 
+/**
+ Get the position of the given UITouch
+ */
 -(CGPoint) locationFromTouch:(UITouch*)touch
 {
 	CGPoint touchLocation = [touch locationInView: [touch view]];
 	return [[CCDirector sharedDirector] convertToGL:touchLocation];
 }
 
--(void) moveMotionStreakToTouch:(UITouch*)touch
+#pragma mark Touch Handling
+
+-(void) registerWithTouchDispatcher
 {
-	CCMotionStreak* streak = [self getMotionStreak];
-	streak.position = [self locationFromTouch:touch];
+	[[CCDirector sharedDirector].touchDispatcher addTargetedDelegate:self priority:0 swallowsTouches:YES];
 }
 
 -(BOOL) ccTouchBegan:(UITouch*)touch withEvent:(UIEvent *)event
@@ -241,52 +310,38 @@ static void forEachShape(cpShape* shape, void* data)
 
 -(void) ccTouchEnded:(UITouch*)touch withEvent:(UIEvent *)event
 {
-    CGPoint touchEnd = [self locationFromTouch:touch];
-    CGPoint delta = ccpSub(touchEnd, touchStart);
-    
-    NSTimeInterval endTime = event.timestamp;
-    double deltaTime = endTime - startTime;
-    
-    
-    CGPoint force = ccpAdd(touchEnd, ccpMult(delta, 1 / deltaTime));
-    
     [self resetMotionStreak];
-    [self addNewPlayerAt:[self locationFromTouch:touch] withForce:force];
-    
-    CGPoint arrow = ccpAdd(touchEnd, delta);
-    CCSprite *circle = [CCSprite spriteWithFile:@"fire.png"];
-    circle.position = touchEnd;
-    [self addChild:circle];
-    [circle runAction:[CCMoveTo actionWithDuration:0.1 position:arrow]];
+
+    if(gameMode == kIdle) {
+        CGPoint touchEnd = [self locationFromTouch:touch];
+        CGPoint delta = ccpSub(touchEnd, touchStart);
+        
+        NSTimeInterval endTime = event.timestamp;
+        double deltaTime = endTime - startTime;
+        
+        
+        CGPoint impulse = ccpMult(delta, (1 / deltaTime) * 2);
+        
+        [self addNewPlayerAt:[self locationFromTouch:touch] withImpulse:impulse];
+    }
 }
-#endif
+
+#pragma mark CCNode
 
 -(void) update:(ccTime)delta
 {
-//	CCDirector* director = [CCDirector sharedDirector];
-//	if (director.currentPlatformIsIOS)
-//	{
-//		KKInput* input = [KKInput sharedInput];
-//		if (director.currentDeviceIsSimulator == NO)
-//		{
-//			KKAcceleration* acceleration = input.acceleration;
-//			space->gravity = cpv(500.0f * acceleration.rawX, 500.0f * acceleration.rawY);
-//		}
-//		
-//		if (input.anyTouchEndedThisFrame)
-//		{
-//			[self addNewPlayerAt:[input locationOfAnyTouchInPhase:KKTouchPhaseEnded]];
-//		}
-//	}
-//	else if (director.currentPlatformIsMac)
-//	{
-//		KKInput* input = [KKInput sharedInput];
-//		if (input.isAnyMouseButtonUpThisFrame || CGPointEqualToPoint(input.scrollWheelDelta, CGPointZero) == NO)
-//		{
-//			[self addNewPlayerAt:input.mouseLocation];
-//		}
-//	}
-	
+    if(gameMode == kRunning && playerBody != nil) {
+        if(detectionCounter++ == 10) {
+            detectionCounter = 0;
+            int deltaX = abs(lastPlayerPosition.x - playerBody->p.x);
+            int deltaY = abs(lastPlayerPosition.y - playerBody->p.y);
+            if(deltaX < 10 && deltaY < 10) {
+                [self stopRunningMode];
+            }
+            lastPlayerPosition = playerBody->p;
+        }
+    }
+    
 	float timeStep = 0.03f;
 	cpSpaceStep(space, timeStep);
 	

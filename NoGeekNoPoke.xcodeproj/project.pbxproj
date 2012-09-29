@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		99121C3A1605C81900A15CBB /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = 99121C391605C81900A15CBB /* fire.png */; };
+		995978B81616D62300F7B4C2 /* player.plist in Resources */ = {isa = PBXBuildFile; fileRef = 995978B71616D62300F7B4C2 /* player.plist */; };
 		997A125B160697E600159C3B /* playerBlue.plist in Resources */ = {isa = PBXBuildFile; fileRef = 997A125A160697E600159C3B /* playerBlue.plist */; };
 		997A125F160698D400159C3B /* playerGreen.plist in Resources */ = {isa = PBXBuildFile; fileRef = 997A125D160698D400159C3B /* playerGreen.plist */; };
 		997A1260160698D400159C3B /* playerRed.plist in Resources */ = {isa = PBXBuildFile; fileRef = 997A125E160698D400159C3B /* playerRed.plist */; };
@@ -43,6 +44,7 @@
 
 /* Begin PBXFileReference section */
 		99121C391605C81900A15CBB /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fire.png; sourceTree = "<group>"; };
+		995978B71616D62300F7B4C2 /* player.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = player.plist; sourceTree = "<group>"; };
 		997A125A160697E600159C3B /* playerBlue.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = playerBlue.plist; sourceTree = "<group>"; };
 		997A125D160698D400159C3B /* playerGreen.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = playerGreen.plist; sourceTree = "<group>"; };
 		997A125E160698D400159C3B /* playerRed.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = playerRed.plist; sourceTree = "<group>"; };
@@ -212,6 +214,7 @@
 		DCC1A39413A94F1A005BD75D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				995978B71616D62300F7B4C2 /* player.plist */,
 				997A125D160698D400159C3B /* playerGreen.plist */,
 				997A125E160698D400159C3B /* playerRed.plist */,
 				997A125A160697E600159C3B /* playerBlue.plist */,
@@ -317,6 +320,7 @@
 				997A125B160697E600159C3B /* playerBlue.plist in Resources */,
 				997A125F160698D400159C3B /* playerGreen.plist in Resources */,
 				997A1260160698D400159C3B /* playerRed.plist in Resources */,
+				995978B81616D62300F7B4C2 /* player.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
