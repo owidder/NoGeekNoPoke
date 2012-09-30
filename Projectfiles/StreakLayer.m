@@ -9,16 +9,47 @@
 
 #import "CGPointExtension.h"
 
+#pragma mark NodeAndFilename
+
+// used for the explode method as user data
+@interface NodeAndFilename : NSObject
+@property(strong) CCNode *node;
+@property(strong) NSString *filename;
+@end
+
+@implementation NodeAndFilename
+@synthesize node = _node;
+@synthesize filename = _filename;
+@end
+
+// when the game is in running mode
+// no new player can be created
+static GameMode gameMode;
+
 // C callback method that updates sprite position and rotation:
 static void forEachShape(cpShape* shape, void* data)
 {
+    cpBody *playerBody = (cpBody*) data;
+    
     if(shape != nil) {
         CCSprite* sprite = (__bridge CCSprite*)shape->data;
-        if (sprite != nil)
-        {
+        if (sprite != nil) {
             cpBody* body = shape->body;
             sprite.position = body->p;
             //		sprite.rotation = CC_RADIANS_TO_DEGREES(body->a) * -1;
+            
+            // apply forces from each galaxy to the player
+            if(playerBody != nil && body != nil && body != playerBody) {
+                float distance = ccpDistance(playerBody->p, body->p);
+                if(distance < 10) {
+                    gameMode = kLost;
+                }
+                else {
+                    CGPoint direction = ccpSub(body->p, playerBody->p);
+                    float f = 200 / (distance * distance);
+                    cpBodyApplyForce(playerBody, ccpMult(direction, f), CGPointMake(5.0, 5.0));
+                }
+            }
         }
     }
 }
@@ -43,21 +74,20 @@ static void forEachShape(cpShape* shape, void* data)
     CGPoint touchStart;
     
     // the time when a touch has started
-    NSTimeInterval startTime;
-    
-    // when the game is in running mode
-    // no new player can be created
-    GameMode gameMode;
+    NSTimeInterval startTime;    
 }
 
 -(void) resetMotionStreak;
 -(CCMotionStreak*) currentMotionStreak;
 -(void) addNewPlayerAt:(CGPoint)pos withImpulse:(CGPoint)impulse;
--(CCParticleSystem*) addParticleSystemAt:(CGPoint)pos;
+-(CCParticleSystem*) addParticleSystemAt:(CGPoint)pos withFile:(NSString*)file;
 -(void) moveMotionStreakToTouch:(UITouch*)touch;
 -(CGPoint) locationFromTouch:(UITouch*)touch;
 -(void) stopRunningMode;
--(void) createTheSuns;
+-(void) createGalaxyAtPosition:(CGPoint)position withFile:(NSString*)file;
+-(void) explodeNode:(NSTimer*)timer;
+-(void) removeNode:(NSTimer*)timer;
+-(void) createGalaxyAtPosition:(CGPoint)position withFile:(NSString*)file;
 @end
 
 @implementation StreakLayer
@@ -133,9 +163,10 @@ static void forEachShape(cpShape* shape, void* data)
 		shape->e = elasticity;
 		shape->u = friction;
 		cpSpaceAddStaticShape(space, shape);
-		
-//        CCNode *particleNode = [CCNode node];
-//        [self addChild:particleNode z:0 tag:kTagParticleSystem];
+        
+        [self createGalaxyAtPosition:CGPointMake(screenSize.width/2, screenSize.height/2) withFile:@"blueGalaxy.plist"];
+        [self createGalaxyAtPosition:CGPointMake(screenSize.width/2-200, screenSize.height/2-200) withFile:@"redGalaxy.plist"];
+        [self createGalaxyAtPosition:CGPointMake(screenSize.width/2+200, screenSize.height/2-200) withFile:@"greenGalaxy.plist"];
 		
 //		[KKInput sharedInput].accelerometerActive = YES;
         
@@ -161,10 +192,29 @@ static void forEachShape(cpShape* shape, void* data)
 #pragma mark private methods
 
 /**
- Create the suns who are applying a constant force on the player
+ Create a galaxy at the given position and with a particle plist file with the given name
  */
--(void) createTheSuns
+-(void) createGalaxyAtPosition:(CGPoint)position withFile:(NSString*)file
 {
+	float mass = 200.0f;
+	float moment = cpMomentForCircle(mass, 3, 3, CGPointZero);
+	cpBody *galaxyBody = cpBodyNew(mass, moment);
+	
+	galaxyBody->p = position;
+	cpSpaceAddBody(space, galaxyBody);
+	
+	float elasticity = 1.0f;
+	float friction = 1.0f;
+	
+    cpShape *galaxyShape = cpCircleShapeNew(galaxyBody, 3, CGPointZero);
+	galaxyShape->e = elasticity;
+	galaxyShape->u = friction;
+    
+    
+    CCNode *galaxyNode = [self addParticleSystemAt:position withFile:file];
+	galaxyShape->data = (__bridge void*)galaxyNode;
+    
+	cpSpaceAddShape(space, galaxyShape);
 }
 
 /**
@@ -178,8 +228,24 @@ static void forEachShape(cpShape* shape, void* data)
 }
 
 /**
+ Do an explosion of the position of the node which is in the user info of the given timer
+ The explosin type depends on the gameMode (idle or lost)
+ */
+-(void) explodeNode:(NSTimer*)timer;
+{
+    NodeAndFilename *nodeAndFilename = (NodeAndFilename*) timer.userInfo;
+    CCParticleSystemQuad *explosion;
+    explosion = [CCParticleSystemQuad particleWithFile:nodeAndFilename.filename];
+    explosion.position = nodeAndFilename.node.position;
+    [self removeChild:nodeAndFilename.node cleanup:YES];
+    [self addChild:explosion];
+    
+    [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(removeNode:) userInfo:explosion repeats:NO];
+}
+
+/**
  Stop the running mode:
- - Remove the player
+ - Remove the player (with an explosion)
  */
 -(void) stopRunningMode {
     cpSpaceRemoveShape(space, playerShape);
@@ -187,7 +253,19 @@ static void forEachShape(cpShape* shape, void* data)
     cpShapeFree(playerShape);
     cpBodyFree(playerBody);
     
-    [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(removeNode:) userInfo:playerNode repeats:NO];
+    playerBody = nil;
+    playerShape = nil;
+    
+    NodeAndFilename *userInfo = [[NodeAndFilename alloc] init];
+    userInfo.node = playerNode;
+    if(gameMode == kLost) {
+        userInfo.filename = @"bang.plist";
+    }
+    else {
+        userInfo.filename = @"explode.plist";
+    }
+    
+    [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(explodeNode:) userInfo:userInfo repeats:NO];
     
     gameMode = kIdle;
 }
@@ -195,15 +273,14 @@ static void forEachShape(cpShape* shape, void* data)
 /**
  Add a new 'player.plist' partice system at the given position
  */
--(CCParticleSystem*) addParticleSystemAt:(CGPoint)pos
+-(CCParticleSystem*) addParticleSystemAt:(CGPoint)pos withFile:(NSString*)file
 {
-    CCParticleSystemQuad *psq;
-    playerNode = [CCParticleSystemQuad particleWithFile:@"player.plist"];
-    playerNode.position = pos;
+    CCParticleSystemQuad *psq = [CCParticleSystemQuad particleWithFile:file];
+    psq.position = pos;
     
-    [self addChild:playerNode z:0 tag:kTagPlayer];
+    [self addChild:psq z:0 tag:kTagPlayer];
     
-    return playerNode;
+    return psq;
 }
 
 /**
@@ -247,7 +324,9 @@ static void forEachShape(cpShape* shape, void* data)
     playerShape = cpCircleShapeNew(playerBody, 10, CGPointZero);
 	playerShape->e = elasticity;
 	playerShape->u = friction;
-	playerShape->data = (__bridge void*)[self addParticleSystemAt:pos];
+    
+    playerNode = [self addParticleSystemAt:pos withFile:@"player.plist"];
+	playerShape->data = (__bridge void*)playerNode;
 	cpSpaceAddShape(space, playerShape);
     
     cpBodyApplyImpulse(playerBody, impulse, CGPointMake(5, 5));
@@ -314,15 +393,20 @@ static void forEachShape(cpShape* shape, void* data)
 
     if(gameMode == kIdle) {
         CGPoint touchEnd = [self locationFromTouch:touch];
-        CGPoint delta = ccpSub(touchEnd, touchStart);
         
-        NSTimeInterval endTime = event.timestamp;
-        double deltaTime = endTime - startTime;
-        
-        
-        CGPoint impulse = ccpMult(delta, (1 / deltaTime) * 2);
-        
-        [self addNewPlayerAt:[self locationFromTouch:touch] withImpulse:impulse];
+        float distance = ccpDistance(touchEnd, touchStart);
+        if(distance < 100) {
+            CGPoint delta = ccpSub(touchEnd, touchStart);
+            
+            NSTimeInterval endTime = event.timestamp;
+            double deltaTime = endTime - startTime;
+            
+            float force = max((1 / deltaTime), 5) * 2;
+            
+            CGPoint impulse = ccpMult(delta, force);
+            
+            [self addNewPlayerAt:[self locationFromTouch:touch] withImpulse:impulse];
+        }        
     }
 }
 
@@ -330,15 +414,23 @@ static void forEachShape(cpShape* shape, void* data)
 
 -(void) update:(ccTime)delta
 {
-    if(gameMode == kRunning && playerBody != nil) {
+    BOOL playerStopped = NO;
+    
+    if(gameMode == kLost) {
+        [self stopRunningMode];
+    }
+    else if(gameMode == kRunning && playerBody != nil) {
         if(detectionCounter++ == 10) {
             detectionCounter = 0;
             int deltaX = abs(lastPlayerPosition.x - playerBody->p.x);
             int deltaY = abs(lastPlayerPosition.y - playerBody->p.y);
             if(deltaX < 10 && deltaY < 10) {
                 [self stopRunningMode];
+                playerStopped = YES;
             }
-            lastPlayerPosition = playerBody->p;
+            else {
+                lastPlayerPosition = playerBody->p;
+            }
         }
     }
     
@@ -346,7 +438,7 @@ static void forEachShape(cpShape* shape, void* data)
 	cpSpaceStep(space, timeStep);
 	
 	// call forEachShape C method to update sprite positions
-	cpSpaceEachShape(space, &forEachShape, nil);
+    cpSpaceEachShape(space, &forEachShape, playerBody);
 }
 
 @end

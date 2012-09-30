@@ -16,6 +16,11 @@
 		998972E215FC91F600B13371 /* Circle.png in Resources */ = {isa = PBXBuildFile; fileRef = 998972E115FC91F600B13371 /* Circle.png */; };
 		998972E415FC98CF00B13371 /* motionstreak.png in Resources */ = {isa = PBXBuildFile; fileRef = 998972E315FC98CF00B13371 /* motionstreak.png */; };
 		998972E615FC9A1900B13371 /* motionstreak2.png in Resources */ = {isa = PBXBuildFile; fileRef = 998972E515FC9A1900B13371 /* motionstreak2.png */; };
+		99CC0FA616178E3E0047CF43 /* explode.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99CC0FA516178E3E0047CF43 /* explode.plist */; };
+		99CC0FA91617A9FA0047CF43 /* greenGalaxy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99CC0FA81617A9FA0047CF43 /* greenGalaxy.plist */; };
+		99CC0FAB1617AA030047CF43 /* blueGalaxy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99CC0FAA1617AA030047CF43 /* blueGalaxy.plist */; };
+		99CC0FAD1617AA0B0047CF43 /* redGalaxy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99CC0FAC1617AA0B0047CF43 /* redGalaxy.plist */; };
+		99CC0FAF1617BCC50047CF43 /* bang.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99CC0FAE1617BCC50047CF43 /* bang.plist */; };
 		DC21B88B1511078F00FD4891 /* fps_images-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = DC21B8881511078F00FD4891 /* fps_images-hd.png */; };
 		DC21B88C1511078F00FD4891 /* fps_images-ipadhd.png in Resources */ = {isa = PBXBuildFile; fileRef = DC21B8891511078F00FD4891 /* fps_images-ipadhd.png */; };
 		DC21B88D1511078F00FD4891 /* fps_images.png in Resources */ = {isa = PBXBuildFile; fileRef = DC21B88A1511078F00FD4891 /* fps_images.png */; };
@@ -53,6 +58,11 @@
 		998972E115FC91F600B13371 /* Circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Circle.png; sourceTree = "<group>"; };
 		998972E315FC98CF00B13371 /* motionstreak.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = motionstreak.png; sourceTree = "<group>"; };
 		998972E515FC9A1900B13371 /* motionstreak2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = motionstreak2.png; sourceTree = "<group>"; };
+		99CC0FA516178E3E0047CF43 /* explode.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = explode.plist; sourceTree = "<group>"; };
+		99CC0FA81617A9FA0047CF43 /* greenGalaxy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = greenGalaxy.plist; sourceTree = "<group>"; };
+		99CC0FAA1617AA030047CF43 /* blueGalaxy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = blueGalaxy.plist; sourceTree = "<group>"; };
+		99CC0FAC1617AA0B0047CF43 /* redGalaxy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = redGalaxy.plist; sourceTree = "<group>"; };
+		99CC0FAE1617BCC50047CF43 /* bang.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = bang.plist; sourceTree = "<group>"; };
 		DC21B8881511078F00FD4891 /* fps_images-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "fps_images-hd.png"; path = "Resources/fps_images-hd.png"; sourceTree = "<group>"; };
 		DC21B8891511078F00FD4891 /* fps_images-ipadhd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "fps_images-ipadhd.png"; path = "Resources/fps_images-ipadhd.png"; sourceTree = "<group>"; };
 		DC21B88A1511078F00FD4891 /* fps_images.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fps_images.png; path = Resources/fps_images.png; sourceTree = "<group>"; };
@@ -214,6 +224,11 @@
 		DCC1A39413A94F1A005BD75D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				99CC0FAA1617AA030047CF43 /* blueGalaxy.plist */,
+				99CC0FA81617A9FA0047CF43 /* greenGalaxy.plist */,
+				99CC0FAC1617AA0B0047CF43 /* redGalaxy.plist */,
+				99CC0FA516178E3E0047CF43 /* explode.plist */,
+				99CC0FAE1617BCC50047CF43 /* bang.plist */,
 				995978B71616D62300F7B4C2 /* player.plist */,
 				997A125D160698D400159C3B /* playerGreen.plist */,
 				997A125E160698D400159C3B /* playerRed.plist */,
@@ -321,6 +336,11 @@
 				997A125F160698D400159C3B /* playerGreen.plist in Resources */,
 				997A1260160698D400159C3B /* playerRed.plist in Resources */,
 				995978B81616D62300F7B4C2 /* player.plist in Resources */,
+				99CC0FA616178E3E0047CF43 /* explode.plist in Resources */,
+				99CC0FA91617A9FA0047CF43 /* greenGalaxy.plist in Resources */,
+				99CC0FAB1617AA030047CF43 /* blueGalaxy.plist in Resources */,
+				99CC0FAD1617AA0B0047CF43 /* redGalaxy.plist in Resources */,
+				99CC0FAF1617BCC50047CF43 /* bang.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

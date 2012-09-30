@@ -16,7 +16,8 @@ typedef enum
 
 typedef enum {
     kRunning,
-    kIdle
+    kIdle,
+    kLost
 } GameMode;
 
 @interface StreakLayer : CCLayer
