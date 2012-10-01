@@ -16,6 +16,7 @@
 #else
 	CCLOG(@"ARC is either not available or not enabled");
 #endif
+    
 }
 
 -(id) alternateView

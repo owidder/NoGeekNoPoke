@@ -8,11 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		99121C3A1605C81900A15CBB /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = 99121C391605C81900A15CBB /* fire.png */; };
+		992BFB42161A568600F38D41 /* rgbGalaxy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB41161A568600F38D41 /* rgbGalaxy.plist */; };
+		992BFB45161A5C8C00F38D41 /* newRound.plist in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB44161A5C8C00F38D41 /* newRound.plist */; };
 		995978B81616D62300F7B4C2 /* player.plist in Resources */ = {isa = PBXBuildFile; fileRef = 995978B71616D62300F7B4C2 /* player.plist */; };
 		997A125B160697E600159C3B /* playerBlue.plist in Resources */ = {isa = PBXBuildFile; fileRef = 997A125A160697E600159C3B /* playerBlue.plist */; };
 		997A125F160698D400159C3B /* playerGreen.plist in Resources */ = {isa = PBXBuildFile; fileRef = 997A125D160698D400159C3B /* playerGreen.plist */; };
 		997A1260160698D400159C3B /* playerRed.plist in Resources */ = {isa = PBXBuildFile; fileRef = 997A125E160698D400159C3B /* playerRed.plist */; };
-		998972DC15FC8CB000B13371 /* StreakLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 998972DB15FC8CB000B13371 /* StreakLayer.m */; };
+		998972DC15FC8CB000B13371 /* GalaxyGameFieldLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 998972DB15FC8CB000B13371 /* GalaxyGameFieldLayer.m */; };
 		998972E215FC91F600B13371 /* Circle.png in Resources */ = {isa = PBXBuildFile; fileRef = 998972E115FC91F600B13371 /* Circle.png */; };
 		998972E415FC98CF00B13371 /* motionstreak.png in Resources */ = {isa = PBXBuildFile; fileRef = 998972E315FC98CF00B13371 /* motionstreak.png */; };
 		998972E615FC9A1900B13371 /* motionstreak2.png in Resources */ = {isa = PBXBuildFile; fileRef = 998972E515FC9A1900B13371 /* motionstreak2.png */; };
@@ -21,6 +23,8 @@
 		99CC0FAB1617AA030047CF43 /* blueGalaxy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99CC0FAA1617AA030047CF43 /* blueGalaxy.plist */; };
 		99CC0FAD1617AA0B0047CF43 /* redGalaxy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99CC0FAC1617AA0B0047CF43 /* redGalaxy.plist */; };
 		99CC0FAF1617BCC50047CF43 /* bang.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99CC0FAE1617BCC50047CF43 /* bang.plist */; };
+		99CC0FB51618319A0047CF43 /* GalaxyGameLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 99CC0FB41618319A0047CF43 /* GalaxyGameLayer.m */; };
+		99CC0FB8161832390047CF43 /* GalaxyGameUiLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 99CC0FB7161832390047CF43 /* GalaxyGameUiLayer.m */; };
 		DC21B88B1511078F00FD4891 /* fps_images-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = DC21B8881511078F00FD4891 /* fps_images-hd.png */; };
 		DC21B88C1511078F00FD4891 /* fps_images-ipadhd.png in Resources */ = {isa = PBXBuildFile; fileRef = DC21B8891511078F00FD4891 /* fps_images-ipadhd.png */; };
 		DC21B88D1511078F00FD4891 /* fps_images.png in Resources */ = {isa = PBXBuildFile; fileRef = DC21B88A1511078F00FD4891 /* fps_images.png */; };
@@ -49,12 +53,13 @@
 
 /* Begin PBXFileReference section */
 		99121C391605C81900A15CBB /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fire.png; sourceTree = "<group>"; };
+		992BFB41161A568600F38D41 /* rgbGalaxy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = rgbGalaxy.plist; sourceTree = "<group>"; };
+		992BFB44161A5C8C00F38D41 /* newRound.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = newRound.plist; sourceTree = "<group>"; };
 		995978B71616D62300F7B4C2 /* player.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = player.plist; sourceTree = "<group>"; };
 		997A125A160697E600159C3B /* playerBlue.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = playerBlue.plist; sourceTree = "<group>"; };
 		997A125D160698D400159C3B /* playerGreen.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = playerGreen.plist; sourceTree = "<group>"; };
 		997A125E160698D400159C3B /* playerRed.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = playerRed.plist; sourceTree = "<group>"; };
-		998972DA15FC8CB000B13371 /* StreakLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreakLayer.h; sourceTree = "<group>"; };
-		998972DB15FC8CB000B13371 /* StreakLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StreakLayer.m; sourceTree = "<group>"; };
+		998972DB15FC8CB000B13371 /* GalaxyGameFieldLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GalaxyGameFieldLayer.m; sourceTree = "<group>"; };
 		998972E115FC91F600B13371 /* Circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Circle.png; sourceTree = "<group>"; };
 		998972E315FC98CF00B13371 /* motionstreak.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = motionstreak.png; sourceTree = "<group>"; };
 		998972E515FC9A1900B13371 /* motionstreak2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = motionstreak2.png; sourceTree = "<group>"; };
@@ -63,6 +68,11 @@
 		99CC0FAA1617AA030047CF43 /* blueGalaxy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = blueGalaxy.plist; sourceTree = "<group>"; };
 		99CC0FAC1617AA0B0047CF43 /* redGalaxy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = redGalaxy.plist; sourceTree = "<group>"; };
 		99CC0FAE1617BCC50047CF43 /* bang.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = bang.plist; sourceTree = "<group>"; };
+		99CC0FB31618319A0047CF43 /* GalaxyGameLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GalaxyGameLayer.h; sourceTree = "<group>"; };
+		99CC0FB41618319A0047CF43 /* GalaxyGameLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GalaxyGameLayer.m; sourceTree = "<group>"; };
+		99CC0FB6161832390047CF43 /* GalaxyGameUiLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GalaxyGameUiLayer.h; sourceTree = "<group>"; };
+		99CC0FB7161832390047CF43 /* GalaxyGameUiLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GalaxyGameUiLayer.m; sourceTree = "<group>"; };
+		99CC0FBA161837390047CF43 /* GalaxyGameFieldLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GalaxyGameFieldLayer.h; sourceTree = "<group>"; };
 		DC21B8881511078F00FD4891 /* fps_images-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "fps_images-hd.png"; path = "Resources/fps_images-hd.png"; sourceTree = "<group>"; };
 		DC21B8891511078F00FD4891 /* fps_images-ipadhd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "fps_images-ipadhd.png"; path = "Resources/fps_images-ipadhd.png"; sourceTree = "<group>"; };
 		DC21B88A1511078F00FD4891 /* fps_images.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fps_images.png; path = Resources/fps_images.png; sourceTree = "<group>"; };
@@ -126,6 +136,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		99CC0FB9161832420047CF43 /* GalaxyGame */ = {
+			isa = PBXGroup;
+			children = (
+				99CC0FB31618319A0047CF43 /* GalaxyGameLayer.h */,
+				99CC0FB41618319A0047CF43 /* GalaxyGameLayer.m */,
+				99CC0FB6161832390047CF43 /* GalaxyGameUiLayer.h */,
+				99CC0FB7161832390047CF43 /* GalaxyGameUiLayer.m */,
+				99CC0FBA161837390047CF43 /* GalaxyGameFieldLayer.h */,
+				998972DB15FC8CB000B13371 /* GalaxyGameFieldLayer.m */,
+			);
+			name = GalaxyGame;
+			sourceTree = "<group>";
+		};
 		DCC1A0D613A94EC0005BD75D = {
 			isa = PBXGroup;
 			children = (
@@ -211,8 +234,7 @@
 		DCC1A38C13A94F1A005BD75D /* Projectfiles */ = {
 			isa = PBXGroup;
 			children = (
-				998972DA15FC8CB000B13371 /* StreakLayer.h */,
-				998972DB15FC8CB000B13371 /* StreakLayer.m */,
+				99CC0FB9161832420047CF43 /* GalaxyGame */,
 				DCC1A38D13A94F1A005BD75D /* AppDelegate.h */,
 				DCC1A38E13A94F1A005BD75D /* AppDelegate.m */,
 				DCC1A39413A94F1A005BD75D /* Resources */,
@@ -224,9 +246,11 @@
 		DCC1A39413A94F1A005BD75D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				992BFB44161A5C8C00F38D41 /* newRound.plist */,
 				99CC0FAA1617AA030047CF43 /* blueGalaxy.plist */,
 				99CC0FA81617A9FA0047CF43 /* greenGalaxy.plist */,
 				99CC0FAC1617AA0B0047CF43 /* redGalaxy.plist */,
+				992BFB41161A568600F38D41 /* rgbGalaxy.plist */,
 				99CC0FA516178E3E0047CF43 /* explode.plist */,
 				99CC0FAE1617BCC50047CF43 /* bang.plist */,
 				995978B71616D62300F7B4C2 /* player.plist */,
@@ -341,6 +365,8 @@
 				99CC0FAB1617AA030047CF43 /* blueGalaxy.plist in Resources */,
 				99CC0FAD1617AA0B0047CF43 /* redGalaxy.plist in Resources */,
 				99CC0FAF1617BCC50047CF43 /* bang.plist in Resources */,
+				992BFB42161A568600F38D41 /* rgbGalaxy.plist in Resources */,
+				992BFB45161A5C8C00F38D41 /* newRound.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,7 +379,9 @@
 			files = (
 				DCC1A3A913A94F1A005BD75D /* AppDelegate.m in Sources */,
 				DCC1A3AD13A94F1A005BD75D /* main.m in Sources */,
-				998972DC15FC8CB000B13371 /* StreakLayer.m in Sources */,
+				998972DC15FC8CB000B13371 /* GalaxyGameFieldLayer.m in Sources */,
+				99CC0FB51618319A0047CF43 /* GalaxyGameLayer.m in Sources */,
+				99CC0FB8161832390047CF43 /* GalaxyGameUiLayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -15,16 +15,24 @@ typedef enum
 } StreakLayerTags;
 
 typedef enum {
+    kNotStarted,
     kRunning,
     kIdle,
-    kLost
+    kRoundEnded
 } GameMode;
 
-@interface StreakLayer : CCLayer
+typedef enum {
+    kPlayer, kGalaxy, kBorder
+} KindOfThing;
+
+@class GalaxyGameUiLayer;
+
+@interface GalaxyGameFieldLayer : CCLayer
 {
-    cpSpace *space;
+    // the UI layer to display distance, points etc.
+    GalaxyGameUiLayer *uiLayer;
 }
 
-+(id) scene;
+-(id) initWithUiLayer:(GalaxyGameUiLayer*)pUiLayer;
 
 @end
