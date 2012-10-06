@@ -10,6 +10,18 @@
 		99121C3A1605C81900A15CBB /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = 99121C391605C81900A15CBB /* fire.png */; };
 		992BFB42161A568600F38D41 /* rgbGalaxy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB41161A568600F38D41 /* rgbGalaxy.plist */; };
 		992BFB45161A5C8C00F38D41 /* newRound.plist in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB44161A5C8C00F38D41 /* newRound.plist */; };
+		992BFB47161C362900F38D41 /* duck-not-pressed.gif in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB46161C362900F38D41 /* duck-not-pressed.gif */; };
+		992BFB49161C363200F38D41 /* duck-pressed.gif in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB48161C363200F38D41 /* duck-pressed.gif */; };
+		992BFB4C161C37C300F38D41 /* duck-not-pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB4A161C37C300F38D41 /* duck-not-pressed.png */; };
+		992BFB4D161C37C300F38D41 /* duck-pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB4B161C37C300F38D41 /* duck-pressed.png */; };
+		992BFB4F161C3E6900F38D41 /* button4.png in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB4E161C3E6900F38D41 /* button4.png */; };
+		992BFB51161C3F0B00F38D41 /* button-red.png in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB50161C3F0B00F38D41 /* button-red.png */; };
+		992BFB53161C423200F38D41 /* button-middle.png in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB52161C423200F38D41 /* button-middle.png */; };
+		992BFB5C16202F0100F38D41 /* IntroLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 992BFB5B16202F0100F38D41 /* IntroLayer.m */; };
+		992BFB61162036DF00F38D41 /* attributions.txt in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB5E162036DF00F38D41 /* attributions.txt */; };
+		992BFB62162036DF00F38D41 /* galaxy-scene-1.aifc in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB5F162036DF00F38D41 /* galaxy-scene-1.aifc */; };
+		992BFB63162036DF00F38D41 /* intro.aifc in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB60162036DF00F38D41 /* intro.aifc */; };
+		992BFB6B16203B1900F38D41 /* GameManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 992BFB6A16203B1900F38D41 /* GameManager.m */; };
 		995978B81616D62300F7B4C2 /* player.plist in Resources */ = {isa = PBXBuildFile; fileRef = 995978B71616D62300F7B4C2 /* player.plist */; };
 		997A125B160697E600159C3B /* playerBlue.plist in Resources */ = {isa = PBXBuildFile; fileRef = 997A125A160697E600159C3B /* playerBlue.plist */; };
 		997A125F160698D400159C3B /* playerGreen.plist in Resources */ = {isa = PBXBuildFile; fileRef = 997A125D160698D400159C3B /* playerGreen.plist */; };
@@ -55,6 +67,20 @@
 		99121C391605C81900A15CBB /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fire.png; sourceTree = "<group>"; };
 		992BFB41161A568600F38D41 /* rgbGalaxy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = rgbGalaxy.plist; sourceTree = "<group>"; };
 		992BFB44161A5C8C00F38D41 /* newRound.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = newRound.plist; sourceTree = "<group>"; };
+		992BFB46161C362900F38D41 /* duck-not-pressed.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "duck-not-pressed.gif"; sourceTree = "<group>"; };
+		992BFB48161C363200F38D41 /* duck-pressed.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "duck-pressed.gif"; sourceTree = "<group>"; };
+		992BFB4A161C37C300F38D41 /* duck-not-pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "duck-not-pressed.png"; sourceTree = "<group>"; };
+		992BFB4B161C37C300F38D41 /* duck-pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "duck-pressed.png"; sourceTree = "<group>"; };
+		992BFB4E161C3E6900F38D41 /* button4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button4.png; sourceTree = "<group>"; };
+		992BFB50161C3F0B00F38D41 /* button-red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-red.png"; sourceTree = "<group>"; };
+		992BFB52161C423200F38D41 /* button-middle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-middle.png"; sourceTree = "<group>"; };
+		992BFB5A16202F0100F38D41 /* IntroLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntroLayer.h; sourceTree = "<group>"; };
+		992BFB5B16202F0100F38D41 /* IntroLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntroLayer.m; sourceTree = "<group>"; };
+		992BFB5E162036DF00F38D41 /* attributions.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = attributions.txt; sourceTree = "<group>"; };
+		992BFB5F162036DF00F38D41 /* galaxy-scene-1.aifc */ = {isa = PBXFileReference; lastKnownFileType = file; path = "galaxy-scene-1.aifc"; sourceTree = "<group>"; };
+		992BFB60162036DF00F38D41 /* intro.aifc */ = {isa = PBXFileReference; lastKnownFileType = file; path = intro.aifc; sourceTree = "<group>"; };
+		992BFB6916203B1900F38D41 /* GameManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameManager.h; sourceTree = "<group>"; };
+		992BFB6A16203B1900F38D41 /* GameManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameManager.m; sourceTree = "<group>"; };
 		995978B71616D62300F7B4C2 /* player.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = player.plist; sourceTree = "<group>"; };
 		997A125A160697E600159C3B /* playerBlue.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = playerBlue.plist; sourceTree = "<group>"; };
 		997A125D160698D400159C3B /* playerGreen.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = playerGreen.plist; sourceTree = "<group>"; };
@@ -136,6 +162,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		992BFB5916202ED800F38D41 /* Intro */ = {
+			isa = PBXGroup;
+			children = (
+				992BFB5A16202F0100F38D41 /* IntroLayer.h */,
+				992BFB5B16202F0100F38D41 /* IntroLayer.m */,
+			);
+			name = Intro;
+			sourceTree = "<group>";
+		};
+		992BFB5D162036DF00F38D41 /* music */ = {
+			isa = PBXGroup;
+			children = (
+				992BFB5E162036DF00F38D41 /* attributions.txt */,
+				992BFB5F162036DF00F38D41 /* galaxy-scene-1.aifc */,
+				992BFB60162036DF00F38D41 /* intro.aifc */,
+			);
+			path = music;
+			sourceTree = "<group>";
+		};
 		99CC0FB9161832420047CF43 /* GalaxyGame */ = {
 			isa = PBXGroup;
 			children = (
@@ -234,6 +279,9 @@
 		DCC1A38C13A94F1A005BD75D /* Projectfiles */ = {
 			isa = PBXGroup;
 			children = (
+				992BFB6916203B1900F38D41 /* GameManager.h */,
+				992BFB6A16203B1900F38D41 /* GameManager.m */,
+				992BFB5916202ED800F38D41 /* Intro */,
 				99CC0FB9161832420047CF43 /* GalaxyGame */,
 				DCC1A38D13A94F1A005BD75D /* AppDelegate.h */,
 				DCC1A38E13A94F1A005BD75D /* AppDelegate.m */,
@@ -261,7 +309,15 @@
 				998972E515FC9A1900B13371 /* motionstreak2.png */,
 				998972E315FC98CF00B13371 /* motionstreak.png */,
 				998972E115FC91F600B13371 /* Circle.png */,
+				992BFB46161C362900F38D41 /* duck-not-pressed.gif */,
+				992BFB48161C363200F38D41 /* duck-pressed.gif */,
+				992BFB4A161C37C300F38D41 /* duck-not-pressed.png */,
+				992BFB4B161C37C300F38D41 /* duck-pressed.png */,
+				992BFB4E161C3E6900F38D41 /* button4.png */,
+				992BFB50161C3F0B00F38D41 /* button-red.png */,
+				992BFB52161C423200F38D41 /* button-middle.png */,
 				DCC1A39513A94F1A005BD75D /* config.lua */,
+				992BFB5D162036DF00F38D41 /* music */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -367,6 +423,16 @@
 				99CC0FAF1617BCC50047CF43 /* bang.plist in Resources */,
 				992BFB42161A568600F38D41 /* rgbGalaxy.plist in Resources */,
 				992BFB45161A5C8C00F38D41 /* newRound.plist in Resources */,
+				992BFB47161C362900F38D41 /* duck-not-pressed.gif in Resources */,
+				992BFB49161C363200F38D41 /* duck-pressed.gif in Resources */,
+				992BFB4C161C37C300F38D41 /* duck-not-pressed.png in Resources */,
+				992BFB4D161C37C300F38D41 /* duck-pressed.png in Resources */,
+				992BFB4F161C3E6900F38D41 /* button4.png in Resources */,
+				992BFB51161C3F0B00F38D41 /* button-red.png in Resources */,
+				992BFB53161C423200F38D41 /* button-middle.png in Resources */,
+				992BFB61162036DF00F38D41 /* attributions.txt in Resources */,
+				992BFB62162036DF00F38D41 /* galaxy-scene-1.aifc in Resources */,
+				992BFB63162036DF00F38D41 /* intro.aifc in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,6 +448,8 @@
 				998972DC15FC8CB000B13371 /* GalaxyGameFieldLayer.m in Sources */,
 				99CC0FB51618319A0047CF43 /* GalaxyGameLayer.m in Sources */,
 				99CC0FB8161832390047CF43 /* GalaxyGameUiLayer.m in Sources */,
+				992BFB5C16202F0100F38D41 /* IntroLayer.m in Sources */,
+				992BFB6B16203B1900F38D41 /* GameManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

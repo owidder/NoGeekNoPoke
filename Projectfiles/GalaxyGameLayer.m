@@ -23,8 +23,8 @@
 	CCScene* scene = [CCScene node];
     GalaxyGameUiLayer *uiLayer = [GalaxyGameUiLayer node];
     GalaxyGameFieldLayer *fieldLayer = [[GalaxyGameFieldLayer alloc] initWithUiLayer:uiLayer];
-    [scene addChild:uiLayer];
     [scene addChild:fieldLayer];
+    [scene addChild:uiLayer];
     
     return scene;
 }

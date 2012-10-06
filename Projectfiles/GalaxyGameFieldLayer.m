@@ -10,7 +10,26 @@
 
 #import "CGPointExtension.h"
 
-#pragma mark userData, userInfo etc.
+#define GALAXY_SCENE_1_MUSIC_FILE @"galaxy-scene-1.aifc"
+
+#pragma mark constants
+
+/**
+ The increase of the force the galaxies apply on the player for each round
+ */
+static int GALAXY_PLAYER_FORCE_INCREASE = 20;
+
+/**
+ Number of seconds per round
+ */
+static int ROUND_LENGTH_IN_SECONDS = 20;
+
+/**
+ maximum distance points
+ */
+static int MAX_DISTANCE_POINTS = 200;
+
+#pragma mark structs and classes etc.
 
 // used for the explode method as user data
 @interface NodeAndFilename : NSObject
@@ -27,7 +46,7 @@
  Used as UserInfo for the 'forEachShape' method
  */
 typedef struct {
-    float minDistance;
+    int distancePoints;
     cpBody *playerBody;
     int roundNumber;
 } EachShapeData;
@@ -45,14 +64,54 @@ typedef struct {
 /**
  Gets YES when the playerBody collides with a galaxy
  */
-static BOOL playerCollisionHappened;
+static BOOL playerGalaxyCollisionHappened;
+
+/**
+ Gets YES when the playerBody collides with a border
+ */
+static BOOL playerBorderCollisionHappened;
 
 /**
  Default ShapeInfo for borders
  */
 static ShapeInfo borderShapeInfo;
 
-#pragma mark structs
+#pragma mark static helpers
+
+static int distancePoints(float distance) {
+    float roundedDistance = roundf(distance);
+    float points = max(MAX_DISTANCE_POINTS - roundedDistance, 0);
+    
+    return (int) floor(points);
+}
+
+/**
+ @return true if shapeInfoA has kindOfThing1 and shapeInfoB has kindOfThing2 or vice versa
+ */
+static BOOL areTheseKindOfThingsInvolved(ShapeInfo *shapeInfoA, ShapeInfo *shapeInfoB, KindOfThing kindOfThing1, KindOfThing kindOfThing2) {
+    BOOL kindOfThing1IsInvolved = NO;
+    BOOL kindOfThin2IsInvolved = NO;
+
+    if(shapeInfoA != nil) {
+        if(shapeInfoA->kindOfThing == kindOfThing1) {
+            kindOfThing1IsInvolved = YES;
+        }
+        else if(shapeInfoA->kindOfThing == kindOfThing2) {
+            kindOfThin2IsInvolved = YES;
+        }
+    }
+
+    if(shapeInfoB != nil) {
+        if(shapeInfoB->kindOfThing == kindOfThing1) {
+            kindOfThing1IsInvolved = YES;
+        }
+        else if(shapeInfoB->kindOfThing == kindOfThing2) {
+            kindOfThin2IsInvolved = YES;
+        }
+    }
+    
+    return (kindOfThing1IsInvolved && kindOfThin2IsInvolved);
+}
 
 #pragma mark C Callbacks
 
@@ -72,12 +131,13 @@ static void forEachShape(cpShape* shape, void* data)
             // apply forces from each galaxy to the player
             if(eachShapeData->playerBody != nil && shapeInfo->kindOfThing == kGalaxy) {
                 float distance = ccpDistance(eachShapeData->playerBody->p, body->p);
-                if(distance < eachShapeData->minDistance) {
-                    eachShapeData->minDistance = distance;
+                int dp = distancePoints(distance);
+                if(dp > eachShapeData->distancePoints) {
+                    eachShapeData->distancePoints = dp;
                 }
                 else {
                     CGPoint direction = ccpSub(body->p, eachShapeData->playerBody->p);
-                    float f = (eachShapeData->roundNumber*500) / (distance * distance);
+                    float f = (eachShapeData->roundNumber * GALAXY_PLAYER_FORCE_INCREASE) / (distance * distance);
                     cpBodyApplyForce(eachShapeData->playerBody, ccpMult(direction, f), CGPointMake(5.0, 5.0));
                 }
             }
@@ -95,40 +155,8 @@ static int contactBegin(cpArbiter* arbiter, struct cpSpace* space, void* data)
     ShapeInfo *shapeInfoA = (ShapeInfo*) shapeA->data;
     ShapeInfo *shapeInfoB = (ShapeInfo*) shapeB->data;
     
-    
-    BOOL playerIsInvolved = NO;
-    BOOL galaxyIsInvolved = NO;
-    if(shapeInfoA != nil) {
-        switch(shapeInfoA->kindOfThing) {
-            case kPlayer:
-                playerIsInvolved = YES;
-                break;
-                
-            case kGalaxy:
-                galaxyIsInvolved = YES;
-                break;
-                
-            default:
-                break;
-        }
-        if(shapeInfoB != nil) {
-            switch(shapeInfoB->kindOfThing) {
-                case kPlayer:
-                    playerIsInvolved = YES;
-                    break;
-                    
-                case kGalaxy:
-                    galaxyIsInvolved = YES;
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
-	
-    if(playerIsInvolved && galaxyIsInvolved) {
-        playerCollisionHappened = YES;
+    if(areTheseKindOfThingsInvolved(shapeInfoA, shapeInfoB, kPlayer, kGalaxy)) {
+        playerGalaxyCollisionHappened = YES;
     }
     
 	return YES;
@@ -136,9 +164,16 @@ static int contactBegin(cpArbiter* arbiter, struct cpSpace* space, void* data)
 
 static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 {
-//	cpShape* shapeA;
-//	cpShape* shapeB;
-//	cpArbiterGetShapes(arbiter, &shapeA, &shapeB);
+	cpShape* shapeA;
+	cpShape* shapeB;
+	cpArbiterGetShapes(arbiter, &shapeA, &shapeB);
+    
+    ShapeInfo *shapeInfoA = (ShapeInfo*) shapeA->data;
+    ShapeInfo *shapeInfoB = (ShapeInfo*) shapeB->data;
+    
+    if(areTheseKindOfThingsInvolved(shapeInfoA, shapeInfoB, kPlayer, kBorder)) {
+        playerBorderCollisionHappened = YES;
+    }
 }
 
 #pragma mark extension
@@ -161,6 +196,12 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     cpShape *playerShape;
     CCParticleSystem *playerNode;
     ShapeInfo playerShapeInfo;
+    
+    // start positions of the galaxies
+    CGPoint redGalaxyStartPoint;
+    CGPoint blueGalaxyStartPoint;
+    CGPoint greenGalaxyStartPoint;
+    CGPoint rgbGalaxyStartPoint;
     
     // the galaxies
     cpBody *redGalaxy;
@@ -194,9 +235,11 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     NSTimer *remainingSecondsTimer;
     
     /**
-     Number of the current round
+     round data
      */
     int roundNumber;
+    int roundPoints;
+    int totalPoints;
 }
 
 -(void) initField;
@@ -213,6 +256,15 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 -(void) startRound;
 -(void) countDown:(NSTimer*)timer;
 -(void) stopRound;
+
+-(void) updateRoundPoints:(int)p;
+-(void) updateTotalPoints:(int)p;
+-(void) updateRoundNumber:(int)rn;
+-(void) updateDistancePoints:(int)dp;
+-(void) updateRemainingSeconds:(int)rs;
+-(void) displayDistancePoints;
+
+-(void) playMusic;
 @end
 
 @implementation GalaxyGameFieldLayer
@@ -241,6 +293,7 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
         eachShapeData = malloc(sizeof(EachShapeData));
         uiLayer = pUiLayer;
         [self initField];
+        [self playMusic];
     }
     
     return self;
@@ -249,10 +302,32 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 #pragma mark private methods
 
 /**
+ Start the background music
+ */
+-(void) playMusic
+{
+    [CDSoundEngine setMixerSampleRate:CD_SAMPLE_RATE_MID];
+    [[CDAudioManager sharedManager] setResignBehavior:kAMRBStopPlay autoHandle:YES];
+    soundEngine = [SimpleAudioEngine sharedEngine];
+    [soundEngine preloadBackgroundMusic:GALAXY_SCENE_1_MUSIC_FILE];
+    [soundEngine playBackgroundMusic:GALAXY_SCENE_1_MUSIC_FILE];
+
+}
+
+/**
  Init the playing field
  */
 -(void) initField
 {
+    CGSize screenSize = [CCDirector sharedDirector].winSize;
+
+    // new game button
+    newGameButton = [CCMenuItemImage itemWithNormalImage:@"button-middle.png" selectedImage:@"button-middle.png" target:self selector:@selector(newGame)];
+    newGameButton.position = ccp(70, screenSize.height-70);
+    CCMenu *menu = [CCMenu menuWithItems:newGameButton, nil];
+    menu.position = CGPointZero;
+    [self addChild:menu];
+    
     touchStart = CGPointZero;
     
     space = cpSpaceNew();
@@ -265,7 +340,6 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     
     // for the ground body we'll need these values
     float radius = 100.0f;
-    CGSize screenSize = [CCDirector sharedDirector].winSize;
     CGPoint lowerLeftCorner = CGPointMake(-radius, -radius);
     CGPoint lowerRightCorner = CGPointMake(screenSize.width+radius, -radius);
     CGPoint upperLeftCorner = CGPointMake(-radius, screenSize.height+radius);
@@ -310,22 +384,31 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     shape->data = &borderShapeInfo;
     cpSpaceAddStaticShape(space, shape);
     
-    blueGalaxy = [self createGalaxyAtPosition:CGPointMake(screenSize.width/2, screenSize.height/2) withFile:@"rgbGalaxy.plist"];
-    redGalaxy = [self createGalaxyAtPosition:CGPointMake(screenSize.width/2, screenSize.height-50) withFile:@"redGalaxy.plist"];
-    greenGalaxy = [self createGalaxyAtPosition:CGPointMake(screenSize.width-50, 50) withFile:@"greenGalaxy.plist"];
-    rgbGalaxy = [self createGalaxyAtPosition:CGPointMake(50, 50) withFile:@"blueGalaxy.plist"];
+    blueGalaxyStartPoint = ccp(screenSize.width/2, screenSize.height/2);
+    redGalaxyStartPoint = ccp(screenSize.width/2, screenSize.height-50);
+    greenGalaxyStartPoint = ccp(screenSize.width-50, 50);
+    rgbGalaxyStartPoint = ccp(50, 50);
+    
+    blueGalaxy = [self createGalaxyAtPosition:blueGalaxyStartPoint withFile:@"rgbGalaxy.plist"];
+    redGalaxy = [self createGalaxyAtPosition:redGalaxyStartPoint withFile:@"redGalaxy.plist"];
+    greenGalaxy = [self createGalaxyAtPosition:greenGalaxyStartPoint withFile:@"greenGalaxy.plist"];
+    rgbGalaxy = [self createGalaxyAtPosition:rgbGalaxyStartPoint withFile:@"blueGalaxy.plist"];
     
     //		[KKInput sharedInput].accelerometerActive = YES;
     
     gameMode = kNotStarted;
-    playerCollisionHappened = NO;
+    playerGalaxyCollisionHappened = NO;
+    
+    attributionLabel =  [CCLabelTTF labelWithString:@"Music '43 Days' by Kemi Helwa (licensed under CC BY 3.0)" fontName:@"AmericanTypewriter-Bold" fontSize:10];
+    attributionLabel.anchorPoint = ccp(0, 0);
+    attributionLabel.position = ccp(10, 10);
+    [self addChild:attributionLabel];
     
     self.isTouchEnabled = YES;
     [self resetMotionStreak];
     [self scheduleUpdate];
     
-    roundNumber = 0;
-    [self startRound];
+    [self startGame];
 }
 
 /**
@@ -488,6 +571,8 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     cpBodyApplyImpulse(playerBody, impulse, CGPointZero);
     
     gameMode = kRunning;
+    
+    remainingSecondsTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countDown:) userInfo:nil repeats:YES];
 }
 
 /**
@@ -519,15 +604,76 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 	return [[CCDirector sharedDirector] convertToGL:touchLocation];
 }
 
-#pragma mark Round Handling
+#pragma mark update the labels
+
+-(void) updateDistancePoints:(int)dp
+{
+    eachShapeData->distancePoints = dp;
+    [self displayDistancePoints];
+}
+
+-(void) updateRoundNumber:(int)rn
+{
+    roundNumber = rn;
+    [uiLayer displayRound:rn];
+}
+
+-(void) updateRoundPoints:(int)p
+{
+    roundPoints = p;
+    [uiLayer displayRoundPoints:p];
+}
+
+-(void) updateTotalPoints:(int)p
+{
+    totalPoints = p;
+    [uiLayer displayTotalPoints:p];
+}
+
+-(void) updateRemainingSeconds:(int)rs
+{
+    if(rs >= 0) {
+        remainingSeconds = rs;
+        [uiLayer displayTime:rs];
+    }
+}
+
+-(void) displayDistancePoints
+{
+    [uiLayer displayDistancePoints:eachShapeData->distancePoints];
+}
+
+#pragma mark Round and Game Handling
+
+-(void) startGame
+{
+    [self updateTotalPoints:0];
+    [self updateRoundNumber:0];
+    [self startRound];
+}
+
+-(void) newGame
+{
+    [self stopRound];
+
+    cpBodySetVel(redGalaxy, ccp(0, 0));
+    cpBodySetVel(blueGalaxy, ccp(0, 0));
+    cpBodySetVel(greenGalaxy, ccp(0, 0));
+    cpBodySetVel(rgbGalaxy, ccp(0, 0));
+    
+    redGalaxy->p = redGalaxyStartPoint;
+    blueGalaxy->p = blueGalaxyStartPoint;
+    greenGalaxy->p = greenGalaxyStartPoint;
+    rgbGalaxy->p = rgbGalaxyStartPoint;
+    
+    [self startGame];
+}
 
 -(void) countDown:(NSTimer *)timer
 {
-    if(remainingSeconds >= 0) {
-        [uiLayer displayTime:remainingSeconds];
-    }
-    remainingSeconds--;
-    if(remainingSeconds < 0) {
+    [self updateRemainingSeconds:--remainingSeconds];
+    if(remainingSeconds == 0) {
+        [self updateTotalPoints:totalPoints + roundPoints];
         gameMode = kRoundEnded;
     }
 }
@@ -539,10 +685,11 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 
 -(void) startRound
 {
-    roundNumber++;
-    [uiLayer displayRound:roundNumber];
-    
-    remainingSeconds = 10;
+    [self updateDistancePoints:0];
+    [self updateRoundPoints:0];
+    [self updateRoundNumber:++roundNumber];
+    [self updateRemainingSeconds:ROUND_LENGTH_IN_SECONDS];
+
     gameMode = kIdle;
     
     CCParticleSystemQuad *newRoundPS;
@@ -553,8 +700,9 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 
     [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(removeNode:) userInfo:newRoundPS repeats:NO];
     
-    [remainingSecondsTimer invalidate];
-    remainingSecondsTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(countDown:) userInfo:nil repeats:YES];
+    if(remainingSecondsTimer) {
+        [remainingSecondsTimer invalidate];
+    }
 }
 
 #pragma mark Touch Handling
@@ -625,18 +773,23 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 	// call forEachShape C method to update sprite positions
     // and to compute the min distance
     
-    eachShapeData->minDistance = MAXFLOAT;
     eachShapeData->playerBody = playerBody;
     eachShapeData->roundNumber = roundNumber;
     
     cpSpaceEachShape(space, &forEachShape, eachShapeData);
-    
-    [uiLayer displayDistance:eachShapeData->minDistance];
-    
-    if(playerCollisionHappened) {
-        playerCollisionHappened = NO;
+
+    [self displayDistancePoints];
+
+    if(playerGalaxyCollisionHappened) {
+        playerGalaxyCollisionHappened = NO;
         [self stopRunningModeWithIsLost:YES];
         [self startRound];
+    }
+    
+    if(playerBorderCollisionHappened) {
+        playerBorderCollisionHappened = NO;
+        [self updateRoundPoints:roundPoints + eachShapeData->distancePoints];
+        [self updateDistancePoints:0];
     }
 }
 

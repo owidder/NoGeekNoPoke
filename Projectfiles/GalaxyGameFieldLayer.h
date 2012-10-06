@@ -7,6 +7,7 @@
 
 #import "cocos2d.h"
 #import "chipmunk.h"
+#import "SimpleAudioEngine.h"
 
 typedef enum
 {
@@ -31,6 +32,18 @@ typedef enum {
 {
     // the UI layer to display distance, points etc.
     GalaxyGameUiLayer *uiLayer;
+    
+    /**
+     Button to start a new game
+     */
+    CCMenuItem *newGameButton;
+
+    /**
+     Attributes the background music
+     */
+    CCLabelTTF *attributionLabel;
+    
+    SimpleAudioEngine *soundEngine;
 }
 
 -(id) initWithUiLayer:(GalaxyGameUiLayer*)pUiLayer;

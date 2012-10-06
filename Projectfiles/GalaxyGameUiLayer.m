@@ -19,25 +19,35 @@
         CGSize winSize = [CCDirector sharedDirector].winSize;
         
         // copied from Rod Strougo, Ray Wenderlich: "Learning Cocos2D"
-        float fontSize = 40.0;
+        float fontSize = 20.0;
         if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             fontSize *= 2;
         }
-        distanceLabel = [CCLabelTTF labelWithString:@"" fontName:@"AmericanTypewriter-Bold" fontSize:fontSize];
-        distanceLabel.anchorPoint = ccp(1, 1);
-        distanceLabel.position =  ccp(winSize.width - 20, winSize.height - 20);
+        distancePointsLabel = [CCLabelTTF labelWithString:@"----" fontName:@"AmericanTypewriter-Bold" fontSize:fontSize];
+        distancePointsLabel.anchorPoint = ccp(0, 0);
+        distancePointsLabel.position =  ccp(100, winSize.height - 100);
         
-        timeLabel = [CCLabelTTF labelWithString:@"" fontName:@"AmericanTypewriter-Bold" fontSize:fontSize/2];
+        timeLabel = [CCLabelTTF labelWithString:@"--" fontName:@"AmericanTypewriter-Bold" fontSize:fontSize/2];
         timeLabel.anchorPoint = ccp(1, 1);
-        timeLabel.position = ccp(winSize.width - 300, winSize.height - 20);
+        timeLabel.position = ccp(200, winSize.height - 20);
         
-        roundLabel = [CCLabelTTF labelWithString:@"" fontName:@"AmericanTypewriter-Bold" fontSize:fontSize/4];
+        roundLabel = [CCLabelTTF labelWithString:@"--" fontName:@"AmericanTypewriter-Bold" fontSize:fontSize/2];
         roundLabel.anchorPoint = ccp(1, 1);
-        roundLabel.position = ccp(winSize.width - 500, winSize.height - 20);
+        roundLabel.position = ccp(300, winSize.height - 20);
         
-        [self addChild:distanceLabel];
+        roundPointsLabel = [CCLabelTTF labelWithString:@"-----" fontName:@"AmericanTypewriter-Bold" fontSize:fontSize/2];
+        roundPointsLabel.anchorPoint = ccp(1, 1);
+        roundPointsLabel.position = ccp(400, winSize.height - 20);
+        
+        totalPointsLabel = [CCLabelTTF labelWithString:@"------" fontName:@"AmericanTypewriter-Bold" fontSize:fontSize/2];
+        totalPointsLabel.anchorPoint = ccp(1, 1);
+        totalPointsLabel.position = ccp(winSize.width-20, winSize.height - 20);
+        
+        [self addChild:distancePointsLabel];
         [self addChild:timeLabel];
         [self addChild:roundLabel];
+        [self addChild:roundPointsLabel];
+        [self addChild:totalPointsLabel];
     }
     
     return self;
@@ -46,17 +56,9 @@
 
 #pragma mark GalaxyGameUiLayer
 
--(void) displayDistance:(float)distance
+-(void) displayDistancePoints:(int)dp
 {
-    NSString *text;
-    if(distance > 1000) {
-        text = @"";
-    }
-    else {
-        int distanceInt = (int) roundf(distance);
-        text = [NSString stringWithFormat:@"%d", distanceInt];
-    }
-    [distanceLabel setString:text];
+    [distancePointsLabel setString:[NSString stringWithFormat:@"%04d", dp]];
 }
 
 -(void) displayTime:(int)remainingSeconds
@@ -67,6 +69,16 @@
 -(void) displayRound:(int)round
 {
     [roundLabel setString:[NSString stringWithFormat:@"%02d", round]];
+}
+
+-(void) displayRoundPoints:(int)points
+{
+    [roundPointsLabel setString:[NSString stringWithFormat:@"%05d", points]];
+}
+
+-(void) displayTotalPoints:(int)points
+{
+    [totalPointsLabel setString:[NSString stringWithFormat:@"%06d", points]];
 }
 
 @end
