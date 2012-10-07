@@ -31,6 +31,8 @@
 		998972E415FC98CF00B13371 /* motionstreak.png in Resources */ = {isa = PBXBuildFile; fileRef = 998972E315FC98CF00B13371 /* motionstreak.png */; };
 		998972E615FC9A1900B13371 /* motionstreak2.png in Resources */ = {isa = PBXBuildFile; fileRef = 998972E515FC9A1900B13371 /* motionstreak2.png */; };
 		99995168162101E300F0953A /* fingertip2.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99995167162101E300F0953A /* fingertip2.plist */; };
+		9999516B16216A2200F0953A /* PointsLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9999516A16216A2200F0953A /* PointsLayer.m */; };
+		9999516F162236CC00F0953A /* RemoveFromParentAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 9999516E162236CC00F0953A /* RemoveFromParentAction.m */; };
 		99C609811620E210006EA78A /* p57.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C6097D1620E210006EA78A /* p57.png */; };
 		99C609821620E210006EA78A /* p72.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C6097E1620E210006EA78A /* p72.png */; };
 		99C609831620E210006EA78A /* p114.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C6097F1620E210006EA78A /* p114.png */; };
@@ -100,6 +102,10 @@
 		998972E315FC98CF00B13371 /* motionstreak.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = motionstreak.png; sourceTree = "<group>"; };
 		998972E515FC9A1900B13371 /* motionstreak2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = motionstreak2.png; sourceTree = "<group>"; };
 		99995167162101E300F0953A /* fingertip2.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = fingertip2.plist; sourceTree = "<group>"; };
+		9999516916216A2200F0953A /* PointsLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PointsLayer.h; sourceTree = "<group>"; };
+		9999516A16216A2200F0953A /* PointsLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PointsLayer.m; sourceTree = "<group>"; };
+		9999516D162236CC00F0953A /* RemoveFromParentAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RemoveFromParentAction.h; sourceTree = "<group>"; };
+		9999516E162236CC00F0953A /* RemoveFromParentAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RemoveFromParentAction.m; sourceTree = "<group>"; };
 		99C6097D1620E210006EA78A /* p57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = p57.png; sourceTree = "<group>"; };
 		99C6097E1620E210006EA78A /* p72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = p72.png; sourceTree = "<group>"; };
 		99C6097F1620E210006EA78A /* p114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = p114.png; sourceTree = "<group>"; };
@@ -201,6 +207,15 @@
 			path = music;
 			sourceTree = "<group>";
 		};
+		9999516C1622369F00F0953A /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				9999516D162236CC00F0953A /* RemoveFromParentAction.h */,
+				9999516E162236CC00F0953A /* RemoveFromParentAction.m */,
+			);
+			name = Util;
+			sourceTree = "<group>";
+		};
 		99CC0FB9161832420047CF43 /* GalaxyGame */ = {
 			isa = PBXGroup;
 			children = (
@@ -210,6 +225,8 @@
 				99CC0FB7161832390047CF43 /* GalaxyGameUiLayer.m */,
 				99CC0FBA161837390047CF43 /* GalaxyGameFieldLayer.h */,
 				998972DB15FC8CB000B13371 /* GalaxyGameFieldLayer.m */,
+				9999516916216A2200F0953A /* PointsLayer.h */,
+				9999516A16216A2200F0953A /* PointsLayer.m */,
 			);
 			name = GalaxyGame;
 			sourceTree = "<group>";
@@ -307,6 +324,7 @@
 		DCC1A38C13A94F1A005BD75D /* Projectfiles */ = {
 			isa = PBXGroup;
 			children = (
+				9999516C1622369F00F0953A /* Util */,
 				992BFB6916203B1900F38D41 /* GameManager.h */,
 				992BFB6A16203B1900F38D41 /* GameManager.m */,
 				992BFB5916202ED800F38D41 /* Intro */,
@@ -490,6 +508,8 @@
 				99CC0FB8161832390047CF43 /* GalaxyGameUiLayer.m in Sources */,
 				992BFB5C16202F0100F38D41 /* IntroLayer.m in Sources */,
 				992BFB6B16203B1900F38D41 /* GameManager.m in Sources */,
+				9999516B16216A2200F0953A /* PointsLayer.m in Sources */,
+				9999516F162236CC00F0953A /* RemoveFromParentAction.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -539,6 +559,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../__Kobold2D__/libs/GoogleAdMobAdsSDK\"",
 				);
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
 		};
@@ -550,6 +571,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../__Kobold2D__/libs/GoogleAdMobAdsSDK\"",
 				);
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
 		};

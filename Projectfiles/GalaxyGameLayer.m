@@ -9,8 +9,26 @@
 #import "GalaxyGameLayer.h"
 #import "GalaxyGameUiLayer.h"
 #import "GalaxyGameFieldLayer.h"
+#import "PointsLayer.h"
 
 @implementation GalaxyGameLayer
+
+#pragma mark NSObject
+
+-(id) init
+{
+    CCLOG(@"%@: %@", NSStringFromSelector(_cmd), self);
+
+    if(self = [super init]) {
+    }
+    
+    return self;
+}
+
+-(void) dealloc
+{
+    CCLOG(@"%@: %@", NSStringFromSelector(_cmd), self);
+}
 
 #pragma mark -
 #pragma mark static helper methods
@@ -22,7 +40,9 @@
 {
 	CCScene* scene = [CCScene node];
     GalaxyGameUiLayer *uiLayer = [GalaxyGameUiLayer node];
-    GalaxyGameFieldLayer *fieldLayer = [[GalaxyGameFieldLayer alloc] initWithUiLayer:uiLayer];
+    PointsLayer *pointsLayer = [[PointsLayer alloc] init];
+    GalaxyGameFieldLayer *fieldLayer = [[GalaxyGameFieldLayer alloc] initWithUiLayer:uiLayer andPointsLayer:pointsLayer];
+    [scene addChild:pointsLayer];
     [scene addChild:fieldLayer];
     [scene addChild:uiLayer];
     

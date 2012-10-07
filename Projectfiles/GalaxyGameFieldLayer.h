@@ -27,11 +27,15 @@ typedef enum {
 } KindOfThing;
 
 @class GalaxyGameUiLayer;
+@class PointsLayer;
 
 @interface GalaxyGameFieldLayer : CCLayer
 {
     // the UI layer to display distance, points etc.
     GalaxyGameUiLayer *uiLayer;
+    
+    // the layer showing the current points
+    PointsLayer *pointsLayer;
     
     /**
      Button to start a new game
@@ -46,6 +50,6 @@ typedef enum {
     SimpleAudioEngine *soundEngine;
 }
 
--(id) initWithUiLayer:(GalaxyGameUiLayer*)pUiLayer;
+-(id) initWithUiLayer:(GalaxyGameUiLayer*)pUiLayer andPointsLayer:(PointsLayer*)pPointsLayer;
 
 @end

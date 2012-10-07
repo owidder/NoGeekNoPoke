@@ -15,6 +15,8 @@
 
 -(id) init
 {
+    CCLOG(@"%@: %@", NSStringFromSelector(_cmd), self);
+
     if(self = [super init]) {
         CGSize winSize = [CCDirector sharedDirector].winSize;
         

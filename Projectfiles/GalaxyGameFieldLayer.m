@@ -7,6 +7,7 @@
 
 #import "GalaxyGameFieldLayer.h"
 #import "GalaxyGameUiLayer.h"
+#import "PointsLayer.h"
 #import "GameManager.h"
 
 #import "CGPointExtension.h"
@@ -50,6 +51,7 @@ typedef struct {
     int distancePoints;
     cpBody *playerBody;
     int roundNumber;
+    cpShape *nearestGalaxyShape;
 } EachShapeData;
 
 /**
@@ -57,7 +59,7 @@ typedef struct {
  */
 typedef struct {
     KindOfThing kindOfThing;
-    void *data;
+    void *node;
 } ShapeInfo;
 
 #pragma mark static fields
@@ -128,18 +130,20 @@ static void forEachShape(cpShape* shape, void* data)
     
     if(shape != nil) {
         ShapeInfo *shapeInfo = (ShapeInfo*) shape->data;
-        CCSprite* sprite = (__bridge CCSprite*)shapeInfo->data;
+        CCSprite* sprite = (__bridge CCSprite*)shapeInfo->node;
         if (sprite != nil) {
             cpBody* body = shape->body;
             sprite.position = body->p;
             //		sprite.rotation = CC_RADIANS_TO_DEGREES(body->a) * -1;
             
             // apply forces from each galaxy to the player
+            // and calculate the distance points
             if(eachShapeData->playerBody != nil && shapeInfo->kindOfThing == kGalaxy) {
                 float distance = ccpDistance(eachShapeData->playerBody->p, body->p);
                 int dp = distancePoints(distance);
                 if(dp > eachShapeData->distancePoints) {
                     eachShapeData->distancePoints = dp;
+                    eachShapeData->nearestGalaxyShape = shape;
                 }
                 else {
                     CGPoint direction = ccpSub(body->p, eachShapeData->playerBody->p);
@@ -219,10 +223,10 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     CGPoint rgbGalaxyStartPoint;
     
     // the galaxies
-    cpBody *redGalaxy;
-    cpBody *blueGalaxy;
-    cpBody *greenGalaxy;
-    cpBody *rgbGalaxy;
+    cpShape *redGalaxyShape;
+    cpShape *blueGalaxyShape;
+    cpShape *greenGalaxyShape;
+    cpShape *rgbGalaxyShape;
     
     // the last players position to detect
     // whether has has moved since
@@ -267,7 +271,7 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 -(void) stopRunningModeWithIsLost:(BOOL)isLost;
 -(void) explodeNode:(NSTimer*)timer;
 -(void) removeNode:(NSTimer*)timer;
--(cpBody*) createGalaxyAtPosition:(CGPoint)position withFile:(NSString*)file;
+-(cpShape*) createGalaxyAtPosition:(CGPoint)position withFile:(NSString*)file;
 -(void) startRound;
 -(void) countDown:(NSTimer*)timer;
 -(void) stopRound;
@@ -281,10 +285,12 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 
 -(void) playMusic;
 
--(BOOL) isInFreeSpace:(CGPoint)pos;
+-(BOOL) isInFreeSpace:(CGPoint)pos withFreeSpaceSize:(int)size;
 -(void) setFingerTipShape:(CGPoint)pos;
 -(void) clearFingerTipShape;
 -(void) moveFingerTipShape:(CGPoint)pos;
+
+-(void) showDistancePoints:(int)points atGalaxy:(cpShape*)galaxyShape;
 @end
 
 @implementation GalaxyGameFieldLayer
@@ -296,10 +302,10 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 	CCLOG(@"%@: %@", NSStringFromSelector(_cmd), self);
     cpSpaceFree(space);
     free(eachShapeData);
-    free(redGalaxy->data);
-    free(blueGalaxy->data);
-    free(greenGalaxy->data);
-    free(rgbGalaxy->data);
+    free(redGalaxyShape->data);
+    free(blueGalaxyShape->data);
+    free(greenGalaxyShape->data);
+    free(rgbGalaxyShape->data);
 #ifndef KK_ARC_ENABLED
 	[super dealloc];
 #endif
@@ -307,11 +313,14 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 
 #pragma mark GalaxyGameFieldLayer
 
--(id) initWithUiLayer:(GalaxyGameUiLayer *)pUiLayer
+-(id) initWithUiLayer:(GalaxyGameUiLayer *)pUiLayer andPointsLayer:(PointsLayer *)pPointsLayer
 {
+    CCLOG(@"%@: %@", NSStringFromSelector(_cmd), self);
+
     if(self = [super init]) {
         eachShapeData = malloc(sizeof(EachShapeData));
         uiLayer = pUiLayer;
+        pointsLayer = pPointsLayer;
         [self initField];
         [self playMusic];
     }
@@ -409,10 +418,10 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     greenGalaxyStartPoint = ccp(screenSize.width-50, 50);
     rgbGalaxyStartPoint = ccp(50, 50);
     
-    blueGalaxy = [self createGalaxyAtPosition:blueGalaxyStartPoint withFile:@"rgbGalaxy.plist"];
-    redGalaxy = [self createGalaxyAtPosition:redGalaxyStartPoint withFile:@"redGalaxy.plist"];
-    greenGalaxy = [self createGalaxyAtPosition:greenGalaxyStartPoint withFile:@"greenGalaxy.plist"];
-    rgbGalaxy = [self createGalaxyAtPosition:rgbGalaxyStartPoint withFile:@"blueGalaxy.plist"];
+    blueGalaxyShape = [self createGalaxyAtPosition:blueGalaxyStartPoint withFile:@"rgbGalaxy.plist"];
+    redGalaxyShape = [self createGalaxyAtPosition:redGalaxyStartPoint withFile:@"redGalaxy.plist"];
+    greenGalaxyShape = [self createGalaxyAtPosition:greenGalaxyStartPoint withFile:@"greenGalaxy.plist"];
+    rgbGalaxyShape = [self createGalaxyAtPosition:rgbGalaxyStartPoint withFile:@"blueGalaxy.plist"];
     
     //		[KKInput sharedInput].accelerometerActive = YES;
     
@@ -439,7 +448,7 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 /**
  Create a galaxy at the given position and with a particle plist file with the given name
  */
--(cpBody*) createGalaxyAtPosition:(CGPoint)position withFile:(NSString*)file
+-(cpShape*) createGalaxyAtPosition:(CGPoint)position withFile:(NSString*)file
 {
 	float mass = 200.0f;
 	float moment = cpMomentForCircle(mass, 10, 10, CGPointZero);
@@ -459,12 +468,12 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     ShapeInfo *galaxyShapeInfo = malloc(sizeof(ShapeInfo));
     galaxyShapeInfo->kindOfThing = kGalaxy;
     CCNode *galaxyNode = [self addParticleSystemAt:position withFile:file];
-    galaxyShapeInfo->data = (__bridge void*)galaxyNode;
+    galaxyShapeInfo->node = (__bridge void*)galaxyNode;
 	galaxyShape->data = galaxyShapeInfo;
     
 	cpSpaceAddShape(space, galaxyShape);
     
-    return galaxyBody;
+    return galaxyShape;
 }
 
 /**
@@ -589,7 +598,7 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
         
     playerNode = [self addParticleSystemAt:pos withFile:@"player.plist"];
     playerShapeInfo.kindOfThing = kPlayer;
-    playerShapeInfo.data = (__bridge void*)playerNode;
+    playerShapeInfo.node = (__bridge void*)playerNode;
 	playerShape->data = &playerShapeInfo;
 	cpSpaceAddShape(space, playerShape);
     
@@ -630,39 +639,41 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 }
 
 /**
- Returns YES if the 'pos' is not over the player or a galaxy
+ Returns YES if in a 'size' radius ariund 'pos' is no galaxy or player (regarding it's position)
  */
--(BOOL) isInFreeSpace:(CGPoint)pos
+-(BOOL) isInFreeSpace:(CGPoint)pos withFreeSpaceSize:(int)size
 {
     BOOL itIs = YES;
     
     int distanceToPlayer = ccpDistance(pos, playerBody->p);
-    if(distanceToPlayer < 15) {
+    if(distanceToPlayer < size) {
         itIs = NO;
     }
     
-    int distanceToRedGalaxy = ccpDistance(pos, redGalaxy->p);
-    if(distanceToRedGalaxy < 15) {
+    int distanceToRedGalaxy = ccpDistance(pos, redGalaxyShape->body->p);
+    if(distanceToRedGalaxy < size) {
         itIs = NO;
     }
     
-    int distanceToGreenGalaxy = ccpDistance(pos, greenGalaxy->p);
-    if(distanceToGreenGalaxy < 15) {
+    int distanceToGreenGalaxy = ccpDistance(pos, greenGalaxyShape->body->p);
+    if(distanceToGreenGalaxy < size) {
         itIs = NO;
     }
     
-    int distanceToBlueGalaxy = ccpDistance(pos, blueGalaxy->p);
-    if(distanceToBlueGalaxy < 15) {
+    int distanceToBlueGalaxy = ccpDistance(pos, blueGalaxyShape->body->p);
+    if(distanceToBlueGalaxy < size) {
         itIs = NO;
     }
     
-    int distanceToRgbGalaxy = ccpDistance(pos, rgbGalaxy->p);
+    int distanceToRgbGalaxy = ccpDistance(pos, rgbGalaxyShape->body->p);
     if(distanceToRgbGalaxy < 15) {
         itIs = NO;
     }
     
     return itIs;
 }
+
+#pragma mark fingerTip handling
 
 /**
  Set a static shape at the given poition
@@ -671,7 +682,7 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 {
 	fingerTipBody = cpBodyNew(INFINITY, INFINITY);
 	fingerTipBody->p = pos;
-//	cpSpaceAddBody(space, staticBody);
+	cpSpaceAddBody(space, fingerTipBody);
     
     fingerTipShape = cpCircleShapeNew(fingerTipBody, 3, CGPointZero);
 	fingerTipShape->e = 1.0f;
@@ -681,10 +692,10 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     ShapeInfo *fingerTipShapeInfo = malloc(sizeof(ShapeInfo));
     fingerTipShapeInfo->kindOfThing = kFingerTip;
     fingerTipNode = [self addParticleSystemAt:pos withFile:@"fingertip2.plist"];
-    fingerTipShapeInfo->data = (__bridge void*)fingerTipNode;
+    fingerTipShapeInfo->node = (__bridge void*)fingerTipNode;
 	fingerTipShape->data = fingerTipShapeInfo;
     
-	cpSpaceAddStaticShape(space, fingerTipShape);
+	cpSpaceAddShape(space, fingerTipShape);
     
     fingerTipSet = YES;
 }
@@ -693,11 +704,12 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 {
     if(fingerTipSet) {
         if(fingerTipShape != nil) {
-            cpSpaceRemoveStaticShape(space, fingerTipShape);
+            cpSpaceRemoveShape(space, fingerTipShape);
             cpShapeFree(fingerTipShape);
             fingerTipShape =nil;
         }
         if(fingerTipBody != nil) {
+            cpSpaceRemoveBody(space, fingerTipBody);
             cpBodyFree(fingerTipBody);
             fingerTipBody = nil;
         }
@@ -711,8 +723,11 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 
 -(void) moveFingerTipShape:(CGPoint)pos
 {
-    [self clearFingerTipShape];
-    [self setFingerTipShape:pos];
+    if(fingerTipSet && fingerTipBody != nil) {
+        fingerTipBody->p = pos;
+    }
+//    [self clearFingerTipShape];
+//    [self setFingerTipShape:pos];
 }
 
 #pragma mark update the labels
@@ -752,6 +767,28 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 -(void) displayDistancePoints
 {
     [uiLayer displayDistancePoints:eachShapeData->distancePoints];
+}
+
+/**
+ Show the current distance points at the galaxy responsible for the points
+ */
+-(void) showDistancePoints:(int)points atGalaxy:(cpShape*)galaxyShape
+{
+    CGPoint galaxyPos = galaxyShape->body->p;
+    CGPoint labelPos = CGPointMake(galaxyPos.x + 30, galaxyPos.y - 30);
+    
+    if(galaxyShape == redGalaxyShape) {
+        [pointsLayer showRedGalaxyPoints:points atPosition:labelPos];
+    }
+    else if(galaxyShape == greenGalaxyShape) {
+        [pointsLayer showGreenGalaxyPoints:points atPosition:labelPos];
+    }
+    else if(galaxyShape == blueGalaxyShape) {
+        [pointsLayer showBlueGalaxyPoints:points atPosition:labelPos];
+    }
+    else if(galaxyShape == rgbGalaxyShape) {
+        [pointsLayer showRgbGalaxyPoints:points atPosition:labelPos];
+    }
 }
 
 #pragma mark Round and Game Handling
@@ -896,6 +933,7 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     
     eachShapeData->playerBody = playerBody;
     eachShapeData->roundNumber = roundNumber;
+    eachShapeData->nearestGalaxyShape = nil;
     
     cpSpaceEachShape(space, &forEachShape, eachShapeData);
 
@@ -917,6 +955,13 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
         playerFingerTipCollisionHappened = NO;
         cpVect vel = cpBodyGetVel(playerBody);
         cpBodySetVel(playerBody, ccp(vel.x*2, vel.y*2));
+    }
+    
+    if(eachShapeData->nearestGalaxyShape != nil) {
+        [self showDistancePoints:eachShapeData->distancePoints atGalaxy:eachShapeData->nearestGalaxyShape];
+    }
+    else {
+        [pointsLayer removeCurrentGalaxyLabel];
     }
 }
 
