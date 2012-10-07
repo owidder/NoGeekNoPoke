@@ -7,6 +7,7 @@
 
 #import "GalaxyGameFieldLayer.h"
 #import "GalaxyGameUiLayer.h"
+#import "GameManager.h"
 
 #import "CGPointExtension.h"
 
@@ -70,6 +71,11 @@ static BOOL playerGalaxyCollisionHappened;
  Gets YES when the playerBody collides with a border
  */
 static BOOL playerBorderCollisionHappened;
+
+/**
+ Gets YES when the playerBody collides with the fingerTip
+ */
+static BOOL playerFingerTipCollisionHappened;
 
 /**
  Default ShapeInfo for borders
@@ -174,6 +180,9 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     if(areTheseKindOfThingsInvolved(shapeInfoA, shapeInfoB, kPlayer, kBorder)) {
         playerBorderCollisionHappened = YES;
     }
+    else if(areTheseKindOfThingsInvolved(shapeInfoA, shapeInfoB, kPlayer, kFingerTip)) {
+        playerFingerTipCollisionHappened = YES;
+    }
 }
 
 #pragma mark extension
@@ -182,6 +191,12 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 {
     // the chipmunk space
     cpSpace *space;
+    
+    // the static shape/node created by a finger tip
+    cpShape *fingerTipShape;
+    CCNode *fingerTipNode;
+    cpBody *fingerTipBody;
+    BOOL fingerTipSet;
     
     // transport data structure for the forEachShape function
     // reused for performance sake
@@ -265,6 +280,11 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 -(void) displayDistancePoints;
 
 -(void) playMusic;
+
+-(BOOL) isInFreeSpace:(CGPoint)pos;
+-(void) setFingerTipShape:(CGPoint)pos;
+-(void) clearFingerTipShape;
+-(void) moveFingerTipShape:(CGPoint)pos;
 @end
 
 @implementation GalaxyGameFieldLayer
@@ -407,6 +427,11 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     self.isTouchEnabled = YES;
     [self resetMotionStreak];
     [self scheduleUpdate];
+    
+    fingerTipShape = nil;
+    fingerTipBody = nil;
+    fingerTipNode = nil;
+    fingerTipSet = NO;
     
     [self startGame];
 }
@@ -604,6 +629,92 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 	return [[CCDirector sharedDirector] convertToGL:touchLocation];
 }
 
+/**
+ Returns YES if the 'pos' is not over the player or a galaxy
+ */
+-(BOOL) isInFreeSpace:(CGPoint)pos
+{
+    BOOL itIs = YES;
+    
+    int distanceToPlayer = ccpDistance(pos, playerBody->p);
+    if(distanceToPlayer < 15) {
+        itIs = NO;
+    }
+    
+    int distanceToRedGalaxy = ccpDistance(pos, redGalaxy->p);
+    if(distanceToRedGalaxy < 15) {
+        itIs = NO;
+    }
+    
+    int distanceToGreenGalaxy = ccpDistance(pos, greenGalaxy->p);
+    if(distanceToGreenGalaxy < 15) {
+        itIs = NO;
+    }
+    
+    int distanceToBlueGalaxy = ccpDistance(pos, blueGalaxy->p);
+    if(distanceToBlueGalaxy < 15) {
+        itIs = NO;
+    }
+    
+    int distanceToRgbGalaxy = ccpDistance(pos, rgbGalaxy->p);
+    if(distanceToRgbGalaxy < 15) {
+        itIs = NO;
+    }
+    
+    return itIs;
+}
+
+/**
+ Set a static shape at the given poition
+ */
+-(void) setFingerTipShape:(CGPoint)pos
+{
+	fingerTipBody = cpBodyNew(INFINITY, INFINITY);
+	fingerTipBody->p = pos;
+//	cpSpaceAddBody(space, staticBody);
+    
+    fingerTipShape = cpCircleShapeNew(fingerTipBody, 3, CGPointZero);
+	fingerTipShape->e = 1.0f;
+	fingerTipShape->u = 1.0f;
+    
+    // ShapeInfo
+    ShapeInfo *fingerTipShapeInfo = malloc(sizeof(ShapeInfo));
+    fingerTipShapeInfo->kindOfThing = kFingerTip;
+    fingerTipNode = [self addParticleSystemAt:pos withFile:@"fingertip2.plist"];
+    fingerTipShapeInfo->data = (__bridge void*)fingerTipNode;
+	fingerTipShape->data = fingerTipShapeInfo;
+    
+	cpSpaceAddStaticShape(space, fingerTipShape);
+    
+    fingerTipSet = YES;
+}
+
+-(void) clearFingerTipShape
+{
+    if(fingerTipSet) {
+        if(fingerTipShape != nil) {
+            cpSpaceRemoveStaticShape(space, fingerTipShape);
+            cpShapeFree(fingerTipShape);
+            fingerTipShape =nil;
+        }
+        if(fingerTipBody != nil) {
+            cpBodyFree(fingerTipBody);
+            fingerTipBody = nil;
+        }
+        if(fingerTipNode != nil) {
+            [self removeChild:fingerTipNode cleanup:YES];
+            fingerTipNode = nil;
+        }
+        fingerTipSet = NO;
+    }
+}
+
+-(void) moveFingerTipShape:(CGPoint)pos
+{
+    [self clearFingerTipShape];
+    [self setFingerTipShape:pos];
+}
+
 #pragma mark update the labels
 
 -(void) updateDistancePoints:(int)dp
@@ -654,19 +765,21 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 
 -(void) newGame
 {
-    [self stopRound];
-
-    cpBodySetVel(redGalaxy, ccp(0, 0));
-    cpBodySetVel(blueGalaxy, ccp(0, 0));
-    cpBodySetVel(greenGalaxy, ccp(0, 0));
-    cpBodySetVel(rgbGalaxy, ccp(0, 0));
+    [GameManager startIntro];
     
-    redGalaxy->p = redGalaxyStartPoint;
-    blueGalaxy->p = blueGalaxyStartPoint;
-    greenGalaxy->p = greenGalaxyStartPoint;
-    rgbGalaxy->p = rgbGalaxyStartPoint;
-    
-    [self startGame];
+//    [self stopRound];
+//
+//    cpBodySetVel(redGalaxy, ccp(0, 0));
+//    cpBodySetVel(blueGalaxy, ccp(0, 0));
+//    cpBodySetVel(greenGalaxy, ccp(0, 0));
+//    cpBodySetVel(rgbGalaxy, ccp(0, 0));
+//    
+//    redGalaxy->p = redGalaxyStartPoint;
+//    blueGalaxy->p = blueGalaxyStartPoint;
+//    greenGalaxy->p = greenGalaxyStartPoint;
+//    rgbGalaxy->p = rgbGalaxyStartPoint;
+//    
+//    [self startGame];
 }
 
 -(void) countDown:(NSTimer *)timer
@@ -715,10 +828,14 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 -(BOOL) ccTouchBegan:(UITouch*)touch withEvent:(UIEvent *)event
 {
     [self resetMotionStreak];
-	[self moveMotionStreakToTouch:touch];
+    [self moveMotionStreakToTouch:touch];
     
     touchStart = [self locationFromTouch:touch];
     startTime = event.timestamp;
+    
+    if(gameMode == kRunning) {
+        [self setFingerTipShape:[self locationFromTouch:touch]];
+    }
 	
 	// Always swallow touches.
 	return YES;
@@ -727,11 +844,15 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 -(void) ccTouchMoved:(UITouch*)touch withEvent:(UIEvent *)event
 {
 	[self moveMotionStreakToTouch:touch];
+    if(gameMode == kRunning) {
+        [self moveFingerTipShape:[self locationFromTouch:touch]];
+    }
 }
 
 -(void) ccTouchEnded:(UITouch*)touch withEvent:(UIEvent *)event
 {
     [self resetMotionStreak];
+    [self clearFingerTipShape];
 
     if(gameMode == kIdle) {
         CGPoint touchEnd = [self locationFromTouch:touch];
@@ -790,6 +911,12 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
         playerBorderCollisionHappened = NO;
         [self updateRoundPoints:roundPoints + eachShapeData->distancePoints];
         [self updateDistancePoints:0];
+    }
+    
+    if(playerFingerTipCollisionHappened) {
+        playerFingerTipCollisionHappened = NO;
+        cpVect vel = cpBodyGetVel(playerBody);
+        cpBodySetVel(playerBody, ccp(vel.x*2, vel.y*2));
     }
 }
 

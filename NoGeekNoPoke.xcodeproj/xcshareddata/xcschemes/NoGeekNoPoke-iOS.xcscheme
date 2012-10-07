@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "DCC1A0E213A94ED5005BD75D"
-               BuildableName = "NoGeekNoPoke-iOS.app"
+               BuildableName = "NoGeekNoPoke.app"
                BlueprintName = "NoGeekNoPoke"
                ReferencedContainer = "container:NoGeekNoPoke.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "DCC1A0E213A94ED5005BD75D"
-            BuildableName = "NoGeekNoPoke-iOS.app"
+            BuildableName = "NoGeekNoPoke.app"
             BlueprintName = "NoGeekNoPoke"
             ReferencedContainer = "container:NoGeekNoPoke.xcodeproj">
          </BuildableReference>
@@ -54,7 +54,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "DCC1A0E213A94ED5005BD75D"
-            BuildableName = "NoGeekNoPoke-iOS.app"
+            BuildableName = "NoGeekNoPoke.app"
             BlueprintName = "NoGeekNoPoke"
             ReferencedContainer = "container:NoGeekNoPoke.xcodeproj">
          </BuildableReference>
@@ -74,7 +74,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "DCC1A0E213A94ED5005BD75D"
-            BuildableName = "NoGeekNoPoke-iOS.app"
+            BuildableName = "NoGeekNoPoke.app"
             BlueprintName = "NoGeekNoPoke"
             ReferencedContainer = "container:NoGeekNoPoke.xcodeproj">
          </BuildableReference>

@@ -10,6 +10,7 @@
 
 @interface GameManager : NSObject
 
++(void) startIntro;
 +(void) startGalaxyScene1;
 
 @end

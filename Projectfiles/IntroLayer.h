@@ -29,4 +29,6 @@
     SimpleAudioEngine *soundEngine;
 }
 
++(id) scene;
+
 @end

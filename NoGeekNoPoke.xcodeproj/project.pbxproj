@@ -30,6 +30,7 @@
 		998972E215FC91F600B13371 /* Circle.png in Resources */ = {isa = PBXBuildFile; fileRef = 998972E115FC91F600B13371 /* Circle.png */; };
 		998972E415FC98CF00B13371 /* motionstreak.png in Resources */ = {isa = PBXBuildFile; fileRef = 998972E315FC98CF00B13371 /* motionstreak.png */; };
 		998972E615FC9A1900B13371 /* motionstreak2.png in Resources */ = {isa = PBXBuildFile; fileRef = 998972E515FC9A1900B13371 /* motionstreak2.png */; };
+		99995168162101E300F0953A /* fingertip2.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99995167162101E300F0953A /* fingertip2.plist */; };
 		99C609811620E210006EA78A /* p57.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C6097D1620E210006EA78A /* p57.png */; };
 		99C609821620E210006EA78A /* p72.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C6097E1620E210006EA78A /* p72.png */; };
 		99C609831620E210006EA78A /* p114.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C6097F1620E210006EA78A /* p114.png */; };
@@ -38,6 +39,7 @@
 		99C6098F1620E517006EA78A /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C6098E1620E517006EA78A /* Default-Landscape~ipad.png */; };
 		99C609931620E5B4006EA78A /* Default-Portrait@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C609921620E5B4006EA78A /* Default-Portrait@2x~ipad.png */; };
 		99C609971620E632006EA78A /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 99C609961620E632006EA78A /* Default-Landscape@2x~ipad.png */; };
+		99C609991620F613006EA78A /* fingertip.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99C609981620F613006EA78A /* fingertip.plist */; };
 		99CC0FA616178E3E0047CF43 /* explode.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99CC0FA516178E3E0047CF43 /* explode.plist */; };
 		99CC0FA91617A9FA0047CF43 /* greenGalaxy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99CC0FA81617A9FA0047CF43 /* greenGalaxy.plist */; };
 		99CC0FAB1617AA030047CF43 /* blueGalaxy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99CC0FAA1617AA030047CF43 /* blueGalaxy.plist */; };
@@ -97,6 +99,7 @@
 		998972E115FC91F600B13371 /* Circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Circle.png; sourceTree = "<group>"; };
 		998972E315FC98CF00B13371 /* motionstreak.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = motionstreak.png; sourceTree = "<group>"; };
 		998972E515FC9A1900B13371 /* motionstreak2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = motionstreak2.png; sourceTree = "<group>"; };
+		99995167162101E300F0953A /* fingertip2.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = fingertip2.plist; sourceTree = "<group>"; };
 		99C6097D1620E210006EA78A /* p57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = p57.png; sourceTree = "<group>"; };
 		99C6097E1620E210006EA78A /* p72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = p72.png; sourceTree = "<group>"; };
 		99C6097F1620E210006EA78A /* p114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = p114.png; sourceTree = "<group>"; };
@@ -105,6 +108,7 @@
 		99C6098E1620E517006EA78A /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
 		99C609921620E5B4006EA78A /* Default-Portrait@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Portrait@2x~ipad.png"; sourceTree = "<group>"; };
 		99C609961620E632006EA78A /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
+		99C609981620F613006EA78A /* fingertip.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = fingertip.plist; sourceTree = "<group>"; };
 		99CC0FA516178E3E0047CF43 /* explode.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = explode.plist; sourceTree = "<group>"; };
 		99CC0FA81617A9FA0047CF43 /* greenGalaxy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = greenGalaxy.plist; sourceTree = "<group>"; };
 		99CC0FAA1617AA030047CF43 /* blueGalaxy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = blueGalaxy.plist; sourceTree = "<group>"; };
@@ -133,7 +137,7 @@
 		DC9C33E713B5024400931BF2 /* BuildSettings-Debug-Mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "BuildSettings-Debug-Mac.xcconfig"; sourceTree = "<group>"; };
 		DC9C33E813B5024400931BF2 /* BuildSettings-Mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "BuildSettings-Mac.xcconfig"; sourceTree = "<group>"; };
 		DC9C33E913B5024400931BF2 /* BuildSettings-Release-Mac.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "BuildSettings-Release-Mac.xcconfig"; sourceTree = "<group>"; };
-		DCC1A0E313A94ED5005BD75D /* NoGeekNoPoke-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "NoGeekNoPoke-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCC1A0E313A94ED5005BD75D /* NoGeekNoPoke.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NoGeekNoPoke.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCC1A0F913A94ED5005BD75D /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Resources/Default.png; sourceTree = "<group>"; };
 		DCC1A0FD13A94ED5005BD75D /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "Resources/Icon-72.png"; sourceTree = "<group>"; };
 		DCC1A0FF13A94ED5005BD75D /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small-50.png"; path = "Resources/Icon-Small-50.png"; sourceTree = "<group>"; };
@@ -233,7 +237,7 @@
 		DCC1A0E413A94ED5005BD75D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				DCC1A0E313A94ED5005BD75D /* NoGeekNoPoke-iOS.app */,
+				DCC1A0E313A94ED5005BD75D /* NoGeekNoPoke.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -318,6 +322,8 @@
 		DCC1A39413A94F1A005BD75D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				99C609981620F613006EA78A /* fingertip.plist */,
+				99995167162101E300F0953A /* fingertip2.plist */,
 				992BFB44161A5C8C00F38D41 /* newRound.plist */,
 				99CC0FAA1617AA030047CF43 /* blueGalaxy.plist */,
 				99CC0FA81617A9FA0047CF43 /* greenGalaxy.plist */,
@@ -386,7 +392,7 @@
 			);
 			name = NoGeekNoPoke;
 			productName = "Hello-World-iOS";
-			productReference = DCC1A0E313A94ED5005BD75D /* NoGeekNoPoke-iOS.app */;
+			productReference = DCC1A0E313A94ED5005BD75D /* NoGeekNoPoke.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -465,6 +471,8 @@
 				99C6098F1620E517006EA78A /* Default-Landscape~ipad.png in Resources */,
 				99C609931620E5B4006EA78A /* Default-Portrait@2x~ipad.png in Resources */,
 				99C609971620E632006EA78A /* Default-Landscape@2x~ipad.png in Resources */,
+				99C609991620F613006EA78A /* fingertip.plist in Resources */,
+				99995168162101E300F0953A /* fingertip2.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

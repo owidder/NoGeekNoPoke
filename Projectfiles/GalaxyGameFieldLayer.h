@@ -23,7 +23,7 @@ typedef enum {
 } GameMode;
 
 typedef enum {
-    kPlayer, kGalaxy, kBorder
+    kPlayer, kGalaxy, kBorder, kFingerTip
 } KindOfThing;
 
 @class GalaxyGameUiLayer;

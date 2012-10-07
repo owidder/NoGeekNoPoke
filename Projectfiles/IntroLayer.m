@@ -37,6 +37,18 @@
     return self;
 }
 
+#pragma mark IntroLayer
+
++(id) scene
+{
+	CCScene* scene = [CCScene node];
+    IntroLayer* introLayer = [IntroLayer node];
+    [scene addChild:introLayer];
+    
+    return scene;
+}
+
+
 #pragma mark privates
 
 -(void) showTitle

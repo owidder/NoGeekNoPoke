@@ -8,8 +8,14 @@
 
 #import "GameManager.h"
 #import "GalaxyGameLayer.h"
+#import "IntroLayer.h"
 
 @implementation GameManager
+
++(void) startIntro
+{
+    [[CCDirector sharedDirector] replaceScene:[IntroLayer scene]];
+}
 
 +(void) startGalaxyScene1
 {
