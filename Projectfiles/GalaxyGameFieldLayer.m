@@ -24,7 +24,7 @@ static int GALAXY_PLAYER_FORCE_INCREASE = 20;
 /**
  Number of seconds per round
  */
-static int ROUND_LENGTH_IN_SECONDS = 20;
+static int ROUND_LENGTH_IN_SECONDS = 60;
 
 /**
  maximum distance points
@@ -279,9 +279,7 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 -(void) updateRoundPoints:(int)p;
 -(void) updateTotalPoints:(int)p;
 -(void) updateRoundNumber:(int)rn;
--(void) updateDistancePoints:(int)dp;
 -(void) updateRemainingSeconds:(int)rs;
--(void) displayDistancePoints;
 
 -(void) playMusic;
 
@@ -351,9 +349,11 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     CGSize screenSize = [CCDirector sharedDirector].winSize;
 
     // new game button
-    newGameButton = [CCMenuItemImage itemWithNormalImage:@"button-middle.png" selectedImage:@"button-middle.png" target:self selector:@selector(newGame)];
-    newGameButton.position = ccp(70, screenSize.height-70);
-    CCMenu *menu = [CCMenu menuWithItems:newGameButton, nil];
+    CCLabelTTF *newGameButtonLabel = [CCLabelTTF labelWithString:@"New Game" fontName:@"Chalkduster" fontSize:20];
+
+    newGameMenuItem = [CCMenuItemLabel itemWithLabel:newGameButtonLabel target:self selector:@selector(newGame)];
+    newGameMenuItem.position = ccp(screenSize.width-100, screenSize.height-70);
+    CCMenu *menu = [CCMenu menuWithItems:newGameMenuItem, nil];
     menu.position = CGPointZero;
     [self addChild:menu];
     
@@ -443,6 +443,19 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     fingerTipSet = NO;
     
     [self startGame];
+}
+
+-(void) showMenu
+{
+    CGSize winsize = [CCDirector sharedDirector].screenSize;
+    
+    CCLabelTTF *startGameButtonLabel = [CCLabelTTF labelWithString:@"New Game" fontName:@"Chalkduster" fontSize:20];
+    
+    newGameMenuItem = [CCMenuItemLabel itemWithLabel:startGameButtonLabel target:self selector:@selector(newGame)];
+    newGameMenuItem.position = ccp(20, winsize.height-100);
+    CCMenu *menu = [CCMenu menuWithItems:newGameMenuItem, nil];
+    menu.position = CGPointZero;
+    [self addChild:menu];
 }
 
 /**
@@ -732,12 +745,6 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 
 #pragma mark update the labels
 
--(void) updateDistancePoints:(int)dp
-{
-    eachShapeData->distancePoints = dp;
-    [self displayDistancePoints];
-}
-
 -(void) updateRoundNumber:(int)rn
 {
     roundNumber = rn;
@@ -762,11 +769,6 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
         remainingSeconds = rs;
         [uiLayer displayTime:rs];
     }
-}
-
--(void) displayDistancePoints
-{
-    [uiLayer displayDistancePoints:eachShapeData->distancePoints];
 }
 
 /**
@@ -831,11 +833,11 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 -(void) stopRound
 {
     [self stopRunningModeWithIsLost:NO];
+    [pointsLayer removeAll];
 }
 
 -(void) startRound
 {
-    [self updateDistancePoints:0];
     [self updateRoundPoints:0];
     [self updateRoundNumber:++roundNumber];
     [self updateRemainingSeconds:ROUND_LENGTH_IN_SECONDS];
@@ -853,6 +855,10 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     if(remainingSecondsTimer) {
         [remainingSecondsTimer invalidate];
     }
+    
+    eachShapeData->roundNumber = roundNumber;
+    eachShapeData->nearestGalaxyShape = nil;
+    eachShapeData->distancePoints = 0;
 }
 
 #pragma mark Touch Handling
@@ -932,12 +938,7 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     // and to compute the min distance
     
     eachShapeData->playerBody = playerBody;
-    eachShapeData->roundNumber = roundNumber;
-    eachShapeData->nearestGalaxyShape = nil;
-    
     cpSpaceEachShape(space, &forEachShape, eachShapeData);
-
-    [self displayDistancePoints];
 
     if(playerGalaxyCollisionHappened) {
         playerGalaxyCollisionHappened = NO;
@@ -948,7 +949,9 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     if(playerBorderCollisionHappened) {
         playerBorderCollisionHappened = NO;
         [self updateRoundPoints:roundPoints + eachShapeData->distancePoints];
-        [self updateDistancePoints:0];
+        [pointsLayer removeCurrentGalaxyLabel];
+        [pointsLayer showRoundPoints:eachShapeData->distancePoints atPosition:playerBody->p];
+        eachShapeData->distancePoints = 0;
     }
     
     if(playerFingerTipCollisionHappened) {
@@ -959,9 +962,6 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     
     if(eachShapeData->nearestGalaxyShape != nil) {
         [self showDistancePoints:eachShapeData->distancePoints atGalaxy:eachShapeData->nearestGalaxyShape];
-    }
-    else {
-        [pointsLayer removeCurrentGalaxyLabel];
     }
 }
 

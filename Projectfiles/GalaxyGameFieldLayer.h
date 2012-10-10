@@ -40,7 +40,7 @@ typedef enum {
     /**
      Button to start a new game
      */
-    CCMenuItem *newGameButton;
+    CCMenuItemLabel *newGameMenuItem;
 
     /**
      Attributes the background music

@@ -21,6 +21,7 @@
 {
 	[super startWithTarget:aTarget];
 	[[aTarget parent] removeChild:aTarget cleanup:YES];
+    [aTarget setParent:nil];
 }
 
 @end

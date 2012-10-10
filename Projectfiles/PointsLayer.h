@@ -18,13 +18,20 @@
     CCLabelTTF *blueGalaxyPointsLabel;
     CCLabelTTF *greenGalaxyPointsLabel;
     CCLabelTTF *rgbGalaxyPointsLabel;
+    
+    /**
+     Label for the round points
+     */
+    CCLabelTTF *roundPointsLabel;
 }
 
 -(void) showRedGalaxyPoints:(int)points atPosition:(CGPoint)pos;
 -(void) showBlueGalaxyPoints:(int)points atPosition:(CGPoint)pos;
 -(void) showGreenGalaxyPoints:(int)points atPosition:(CGPoint)pos;
 -(void) showRgbGalaxyPoints:(int)points atPosition:(CGPoint)pos;
+-(void) showRoundPoints:(int)points atPosition:(CGPoint)pos;
 
 -(void) removeCurrentGalaxyLabel;
+-(void) removeAll;
 
 @end

@@ -25,10 +25,6 @@
         if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             fontSize *= 2;
         }
-        distancePointsLabel = [CCLabelTTF labelWithString:@"----" fontName:@"AmericanTypewriter-Bold" fontSize:fontSize];
-        distancePointsLabel.anchorPoint = ccp(0, 0);
-        distancePointsLabel.position =  ccp(100, winSize.height - 100);
-        
         timeLabel = [CCLabelTTF labelWithString:@"--" fontName:@"AmericanTypewriter-Bold" fontSize:fontSize/2];
         timeLabel.anchorPoint = ccp(1, 1);
         timeLabel.position = ccp(200, winSize.height - 20);
@@ -45,7 +41,6 @@
         totalPointsLabel.anchorPoint = ccp(1, 1);
         totalPointsLabel.position = ccp(winSize.width-20, winSize.height - 20);
         
-        [self addChild:distancePointsLabel];
         [self addChild:timeLabel];
         [self addChild:roundLabel];
         [self addChild:roundPointsLabel];
@@ -57,11 +52,6 @@
 
 
 #pragma mark GalaxyGameUiLayer
-
--(void) displayDistancePoints:(int)dp
-{
-    [distancePointsLabel setString:[NSString stringWithFormat:@"%04d", dp]];
-}
 
 -(void) displayTime:(int)remainingSeconds
 {

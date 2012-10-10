@@ -10,17 +10,11 @@
 #import "cocos2d.h"
 
 @interface GalaxyGameUiLayer : CCLayer {
-    CCLabelTTF *distancePointsLabel;
     CCLabelTTF *timeLabel;
     CCLabelTTF *roundLabel;
     CCLabelTTF *roundPointsLabel;
     CCLabelTTF *totalPointsLabel;
 }
-
-/**
- show the min distance with the distanceLabel
- */
--(void) displayDistancePoints:(int)dp;
 
 /**
  Show the remaining time for each round
