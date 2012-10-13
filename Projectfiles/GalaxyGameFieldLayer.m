@@ -1,4 +1,4 @@
-//
+    //
 //  StreakLayer.h
 //
 //  Created by Oliver Widder

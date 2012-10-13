@@ -27,6 +27,8 @@
 		9959EC111629903300D18089 /* player2.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9959EC101629903300D18089 /* player2.plist */; };
 		9959EC131629911E00D18089 /* greenGalaxy2.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9959EC121629911E00D18089 /* greenGalaxy2.plist */; };
 		9959EC151629935F00D18089 /* blueGalaxy3.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9959EC141629935F00D18089 /* blueGalaxy3.plist */; };
+		9959EC401629DEA600D18089 /* galaxy-scene-2.aifc in Resources */ = {isa = PBXBuildFile; fileRef = 9959EC161629A1D200D18089 /* galaxy-scene-2.aifc */; };
+		9959EC411629DEA600D18089 /* galaxy-scene-3.aifc in Resources */ = {isa = PBXBuildFile; fileRef = 9959EC171629A1D200D18089 /* galaxy-scene-3.aifc */; };
 		997A125B160697E600159C3B /* playerBlue.plist in Resources */ = {isa = PBXBuildFile; fileRef = 997A125A160697E600159C3B /* playerBlue.plist */; };
 		997A125F160698D400159C3B /* playerGreen.plist in Resources */ = {isa = PBXBuildFile; fileRef = 997A125D160698D400159C3B /* playerGreen.plist */; };
 		997A1260160698D400159C3B /* playerRed.plist in Resources */ = {isa = PBXBuildFile; fileRef = 997A125E160698D400159C3B /* playerRed.plist */; };
@@ -477,6 +479,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9959EC401629DEA600D18089 /* galaxy-scene-2.aifc in Resources */,
+				9959EC411629DEA600D18089 /* galaxy-scene-3.aifc in Resources */,
 				DCC1A0FA13A94ED5005BD75D /* Default.png in Resources */,
 				DCC1A0FE13A94ED5005BD75D /* Icon-72.png in Resources */,
 				DCC1A10013A94ED5005BD75D /* Icon-Small-50.png in Resources */,
