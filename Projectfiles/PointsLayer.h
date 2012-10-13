@@ -23,6 +23,11 @@
      Label for the round points
      */
     CCLabelTTF *roundPointsLabel;
+    
+    /**
+     winner and loser
+     */
+    CCLabelTTF *winnerLoserLabel;
 }
 
 -(void) showRedGalaxyPoints:(int)points atPosition:(CGPoint)pos;
@@ -31,7 +36,10 @@
 -(void) showRgbGalaxyPoints:(int)points atPosition:(CGPoint)pos;
 -(void) showRoundPoints:(int)points atPosition:(CGPoint)pos;
 
--(void) removeCurrentGalaxyLabel;
--(void) removeAll;
+-(void) hideCurrentGalaxyLabel;
+-(void) hideAllLabels;
+
+-(void) win;
+-(void) lose;
 
 @end

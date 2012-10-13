@@ -2,5 +2,7 @@ Attributions for the files in this folder:
 
 * 'intro.aifc' is the song '88' by 'steviekeys' licensed unter 'Creative Commons Attribution-NoDerivs 3.0 Unported (CC BY-ND 3.0)', see also [http://sampleswap.org/viewtopic.php?t=1606]
 * 'galaxy-scene-1.aifc' is the song '43 Days' by 'Kemi Helwa' licensed under 'Createive Commons Attribution 3.0 Unported (CC BY 3.0)', see also [http://sampleswap.org/viewtopic.php?t=1209]
+* 'galaxy-scene-2.aifc' is the song 'Dawn' by 'Beda' licensed under 'Createive Commons Attribution 3.0 Unported (CC BY 3.0)', see also [http://sampleswap.org/viewtopic.php?t=2480]
+* 'galaxy-scene-2.aifc' is the song 'Black Hole' by 'Earthling' licensed under 'Createive Commons Attribution 3.0 Unported (CC BY 3.0)', see also [http://sampleswap.org/viewtopic.php?t=2359]
 
 The songs will be attributed in the game during playing

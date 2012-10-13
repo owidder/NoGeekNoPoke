@@ -8,16 +8,23 @@
 
 #import "PointsLayer.h"
 #import "RemoveFromParentAction.h"
+#import "SetStringAction.h"
 
 #define GALAXY_POINTS_LABEL_FONT_NAME @"Georgia"
-#define ROUND_POINTS_LABEL_FONT @"Optima"
 #define GALAXY_POINTS_LABEL_FONT_SIZE 20
-#define ROUND_POINTS_LABEL_FONT_SIZE 100
-#define GALAXY_POINTS_LABEL_FADE_IN_TIME 0.1
+#define GALAXY_POINTS_LABEL_FADE_IN_TIME 0.5
 #define GALAXY_POINTS_LABEL_FADE_OUT_TIME 1.0
-#define GALAXY_POINTS_LABEL_TINT_TO_TIME 5.0
-#define ROUND_POINTS_LABEL_FADE_IN_TIME 0.2
+#define GALAXY_POINTS_LABEL_TINT_TO_TIME 1.0
+
+#define ROUND_POINTS_LABEL_FONT_NAME @"Optima"
+#define ROUND_POINTS_LABEL_FONT_SIZE 100
+#define ROUND_POINTS_LABEL_FADE_IN_TIME 0.3
 #define ROUND_POINTS_LABEL_FADE_OUT_TIME 3.0
+
+#define WINNER_LOSER_LABEL_FONT_NAME @"Optima"
+#define WINNER_LOSER_LABEL_FONT_SIZE 100
+#define WINNER_LOSER_LABEL_FADE_IN_TIME 0.1
+#define WINNER_LOSER_LABEL_FADE_OUT_TIME 3.0
 
 #pragma mark extensions
 
@@ -31,6 +38,7 @@
 
 -(void) showGalaxyPoints:(int)points atPosition:(CGPoint)pos withLabel:(CCLabelTTF*)label;
 -(void) runColorActionForCurrentGalaxyPointsLabel:(NSTimer*)timer;
+-(void) showWinnerLoserLabelWithText:(NSString*)text;
 
 @end
 
@@ -48,9 +56,29 @@
         blueGalaxyPointsLabel = [CCLabelTTF labelWithString:@"" fontName:GALAXY_POINTS_LABEL_FONT_NAME fontSize:GALAXY_POINTS_LABEL_FONT_SIZE];
         greenGalaxyPointsLabel = [CCLabelTTF labelWithString:@"" fontName:GALAXY_POINTS_LABEL_FONT_NAME fontSize:GALAXY_POINTS_LABEL_FONT_SIZE];
         rgbGalaxyPointsLabel = [CCLabelTTF labelWithString:@"" fontName:GALAXY_POINTS_LABEL_FONT_NAME fontSize:GALAXY_POINTS_LABEL_FONT_SIZE];
-        roundPointsLabel = [CCLabelTTF labelWithString:@"" fontName:ROUND_POINTS_LABEL_FONT fontSize:ROUND_POINTS_LABEL_FONT_SIZE];
+        roundPointsLabel = [CCLabelTTF labelWithString:@"" fontName:ROUND_POINTS_LABEL_FONT_NAME fontSize:ROUND_POINTS_LABEL_FONT_SIZE];
+        winnerLoserLabel = [CCLabelTTF labelWithString:@"" fontName:WINNER_LOSER_LABEL_FONT_NAME fontSize:WINNER_LOSER_LABEL_FONT_SIZE];
         
+        redGalaxyPointsLabel.opacity = 0;
+        blueGalaxyPointsLabel.opacity = 0;
+        greenGalaxyPointsLabel.opacity = 0;
+        rgbGalaxyPointsLabel.opacity = 0;
+        
+        [self addChild:redGalaxyPointsLabel];
+        [self addChild:blueGalaxyPointsLabel];
+        [self addChild:greenGalaxyPointsLabel];
+        [self addChild:rgbGalaxyPointsLabel];
         [self addChild:roundPointsLabel];
+        [self addChild:winnerLoserLabel];
+        
+        CGSize winSize = [CCDirector sharedDirector].screenSize;
+        CGPoint startPosition = ccp(winSize.width/2, winSize.height/2);
+        winnerLoserLabel.position = startPosition;
+        redGalaxyPointsLabel.position = startPosition;
+        greenGalaxyPointsLabel.position = startPosition;
+        blueGalaxyPointsLabel.position = startPosition;
+        rgbGalaxyPointsLabel.position = startPosition;
+        roundPointsLabel.position = startPosition;
     }
     
     return self;
@@ -62,6 +90,17 @@
 }
 
 #pragma mark privates
+
+-(void) showWinnerLoserLabelWithText:(NSString *)text
+{
+    winnerLoserLabel.string = text;
+    CCFadeIn *fadeIn = [CCFadeIn actionWithDuration:WINNER_LOSER_LABEL_FADE_IN_TIME];
+    CCFadeOut *fadeOut = [CCFadeOut actionWithDuration:WINNER_LOSER_LABEL_FADE_OUT_TIME];
+    SetStringAction *setEmptyString = [SetStringAction actionWithString:@""];
+    CCSequence *seq = [CCSequence actions:fadeIn, fadeOut, setEmptyString, nil];
+    
+    [winnerLoserLabel runAction:seq];
+}
 
 -(void) runColorActionForCurrentGalaxyPointsLabel:(NSTimer*)timer
 {
@@ -103,22 +142,17 @@
     pos.x = max(pos.x, 100);
     pos.y = min(pos.y, winSize.height - 30);
     pos.y = max(pos.y, 100);
-    
+
     label.position = pos;
     label.string = [NSString stringWithFormat:@"%d", points];
     label.fontSize = max(min(points, 500), 20);
 
     if(label != currentVisibleGalaxyPointsLabel) {
-        if(currentVisibleGalaxyPointsLabel != nil) {
-            [self removeCurrentGalaxyLabel];
-        }
+        currentVisibleGalaxyPointsLabel.string = @"";
         
-        currentVisibleGalaxyPointsLabel = label;
-        if([currentVisibleGalaxyPointsLabel parent] == nil) {
-            [self addChild:currentVisibleGalaxyPointsLabel];
-        }
-        [currentVisibleGalaxyPointsLabel runAction:[CCFadeIn actionWithDuration:GALAXY_POINTS_LABEL_FADE_IN_TIME]];
+        [label runAction:[CCFadeIn actionWithDuration:GALAXY_POINTS_LABEL_FADE_IN_TIME]];
         [NSTimer scheduledTimerWithTimeInterval:GALAXY_POINTS_LABEL_FADE_IN_TIME*2 target:self selector:@selector(runColorActionForCurrentGalaxyPointsLabel:) userInfo:nil repeats:NO];
+        currentVisibleGalaxyPointsLabel = label;
     }
 }
 
@@ -162,37 +196,55 @@
         pos.y = min(pos.y, winSize.height - 300);
         pos.y = max(pos.y, 300);
         
-        CCFadeIn *fadeIn = [CCFadeIn actionWithDuration:ROUND_POINTS_LABEL_FADE_IN_TIME];
-        CCFadeOut *fadeOut = [CCFadeOut actionWithDuration:ROUND_POINTS_LABEL_FADE_OUT_TIME];
-        CCSequence *seq = [CCSequence actions:fadeIn, fadeOut, nil];
-        [roundPointsLabel runAction:seq];
-        if([roundPointsLabel parent] == nil) {
-            [self addChild:roundPointsLabel];
-        }
-        
         roundPointsLabel.position = pos;
         roundPointsLabel.string = [NSString stringWithFormat:@"%d", points];
-        roundPointsLabel.fontSize = max(min(points*3, 1000), 100);
+        roundPointsLabel.fontSize = max(min(points*3, 150), 50);
+        roundPointsLabel.opacity = 0;
+
+        CCFadeIn *fadeIn = [CCFadeIn actionWithDuration:ROUND_POINTS_LABEL_FADE_IN_TIME];
+        CCFadeOut *fadeOut = [CCFadeOut actionWithDuration:ROUND_POINTS_LABEL_FADE_OUT_TIME];
+        SetStringAction *setEmptyString = [SetStringAction actionWithString:@""];
+        CCSequence *seq = [CCSequence actions:fadeIn, fadeOut, setEmptyString, nil];
+        [roundPointsLabel runAction:seq];
     }
 }
 
--(void) removeCurrentGalaxyLabel
+-(void) hideCurrentGalaxyLabel
 {
     if(currentVisibleGalaxyPointsLabel != nil) {
         [currentVisibleGalaxyPointsLabel stopAllActions];
         CCFadeOut *fadeOut = [CCFadeOut actionWithDuration:GALAXY_POINTS_LABEL_FADE_OUT_TIME];
-        RemoveFromParentAction *remove = [RemoveFromParentAction action];
+        SetStringAction *setEmptyString = [SetStringAction actionWithString:@""];
         
-        CCSequence *fadeOutAndRemove = [CCSequence actions:fadeOut, remove, nil];
-        [currentVisibleGalaxyPointsLabel runAction:fadeOutAndRemove];
+        CCSequence *fadeOutAndSetEmptyString = [CCSequence actions:fadeOut, setEmptyString, nil];
+        [currentVisibleGalaxyPointsLabel runAction:fadeOutAndSetEmptyString];
+        
         currentVisibleGalaxyPointsLabel = nil;
     }
 }
 
--(void) removeAll
+-(void) hideAllLabels
 {
-    [self removeCurrentGalaxyLabel];
-    [roundPointsLabel runAction:[CCFadeOut actionWithDuration:ROUND_POINTS_LABEL_FADE_OUT_TIME]];
+    [self hideCurrentGalaxyLabel];
+    SetStringAction *setEmptyString = [SetStringAction actionWithString:@""];
+    CCFadeOut *fadeOut = [CCFadeOut actionWithDuration:ROUND_POINTS_LABEL_FADE_OUT_TIME];
+    CCSequence *seq = [CCSequence actions:fadeOut, setEmptyString, nil];
+    [roundPointsLabel runAction:seq];
+    
+    redGalaxyPointsLabel.string = @"";
+    greenGalaxyPointsLabel.string = @"";
+    blueGalaxyPointsLabel.string = @"";
+    rgbGalaxyPointsLabel.string = @"";
+}
+
+-(void) win
+{
+    [self showWinnerLoserLabelWithText:@"WINNER"];
+}
+
+-(void)lose
+{
+    [self showWinnerLoserLabelWithText:@"LOSER"];
 }
 
 @end

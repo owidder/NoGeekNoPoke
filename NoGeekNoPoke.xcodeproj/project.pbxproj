@@ -23,6 +23,10 @@
 		992BFB63162036DF00F38D41 /* intro.aifc in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB60162036DF00F38D41 /* intro.aifc */; };
 		992BFB6B16203B1900F38D41 /* GameManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 992BFB6A16203B1900F38D41 /* GameManager.m */; };
 		995978B81616D62300F7B4C2 /* player.plist in Resources */ = {isa = PBXBuildFile; fileRef = 995978B71616D62300F7B4C2 /* player.plist */; };
+		9959EC0E1629900000D18089 /* redGalaxy2.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9959EC0D1629900000D18089 /* redGalaxy2.plist */; };
+		9959EC111629903300D18089 /* player2.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9959EC101629903300D18089 /* player2.plist */; };
+		9959EC131629911E00D18089 /* greenGalaxy2.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9959EC121629911E00D18089 /* greenGalaxy2.plist */; };
+		9959EC151629935F00D18089 /* blueGalaxy3.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9959EC141629935F00D18089 /* blueGalaxy3.plist */; };
 		997A125B160697E600159C3B /* playerBlue.plist in Resources */ = {isa = PBXBuildFile; fileRef = 997A125A160697E600159C3B /* playerBlue.plist */; };
 		997A125F160698D400159C3B /* playerGreen.plist in Resources */ = {isa = PBXBuildFile; fileRef = 997A125D160698D400159C3B /* playerGreen.plist */; };
 		997A1260160698D400159C3B /* playerRed.plist in Resources */ = {isa = PBXBuildFile; fileRef = 997A125E160698D400159C3B /* playerRed.plist */; };
@@ -49,6 +53,11 @@
 		99CC0FAF1617BCC50047CF43 /* bang.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99CC0FAE1617BCC50047CF43 /* bang.plist */; };
 		99CC0FB51618319A0047CF43 /* GalaxyGameLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 99CC0FB41618319A0047CF43 /* GalaxyGameLayer.m */; };
 		99CC0FB8161832390047CF43 /* GalaxyGameUiLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 99CC0FB7161832390047CF43 /* GalaxyGameUiLayer.m */; };
+		99E412451626B68D007E6DED /* SetStringAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 99E412441626B68D007E6DED /* SetStringAction.m */; };
+		99E4124816298BF5007E6DED /* redGalaxy2.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99E4124716298BF5007E6DED /* redGalaxy2.plist */; };
+		99E4124A16298CDC007E6DED /* redGalaxy3.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99E4124916298CDC007E6DED /* redGalaxy3.plist */; };
+		99E4124C16298DD6007E6DED /* blueGalaxy2.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99E4124B16298DD6007E6DED /* blueGalaxy2.plist */; };
+		99E4124E16298F5F007E6DED /* player3.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99E4124D16298F5F007E6DED /* player3.plist */; };
 		DC21B88B1511078F00FD4891 /* fps_images-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = DC21B8881511078F00FD4891 /* fps_images-hd.png */; };
 		DC21B88C1511078F00FD4891 /* fps_images-ipadhd.png in Resources */ = {isa = PBXBuildFile; fileRef = DC21B8891511078F00FD4891 /* fps_images-ipadhd.png */; };
 		DC21B88D1511078F00FD4891 /* fps_images.png in Resources */ = {isa = PBXBuildFile; fileRef = DC21B88A1511078F00FD4891 /* fps_images.png */; };
@@ -94,6 +103,12 @@
 		992BFB6916203B1900F38D41 /* GameManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameManager.h; sourceTree = "<group>"; };
 		992BFB6A16203B1900F38D41 /* GameManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameManager.m; sourceTree = "<group>"; };
 		995978B71616D62300F7B4C2 /* player.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = player.plist; sourceTree = "<group>"; };
+		9959EC0D1629900000D18089 /* redGalaxy2.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = redGalaxy2.plist; sourceTree = "<group>"; };
+		9959EC101629903300D18089 /* player2.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = player2.plist; sourceTree = "<group>"; };
+		9959EC121629911E00D18089 /* greenGalaxy2.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = greenGalaxy2.plist; sourceTree = "<group>"; };
+		9959EC141629935F00D18089 /* blueGalaxy3.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = blueGalaxy3.plist; sourceTree = "<group>"; };
+		9959EC161629A1D200D18089 /* galaxy-scene-2.aifc */ = {isa = PBXFileReference; lastKnownFileType = file; path = "galaxy-scene-2.aifc"; sourceTree = "<group>"; };
+		9959EC171629A1D200D18089 /* galaxy-scene-3.aifc */ = {isa = PBXFileReference; lastKnownFileType = file; path = "galaxy-scene-3.aifc"; sourceTree = "<group>"; };
 		997A125A160697E600159C3B /* playerBlue.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = playerBlue.plist; sourceTree = "<group>"; };
 		997A125D160698D400159C3B /* playerGreen.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = playerGreen.plist; sourceTree = "<group>"; };
 		997A125E160698D400159C3B /* playerRed.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = playerRed.plist; sourceTree = "<group>"; };
@@ -125,6 +140,12 @@
 		99CC0FB6161832390047CF43 /* GalaxyGameUiLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GalaxyGameUiLayer.h; sourceTree = "<group>"; };
 		99CC0FB7161832390047CF43 /* GalaxyGameUiLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GalaxyGameUiLayer.m; sourceTree = "<group>"; };
 		99CC0FBA161837390047CF43 /* GalaxyGameFieldLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GalaxyGameFieldLayer.h; sourceTree = "<group>"; };
+		99E412431626B68D007E6DED /* SetStringAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetStringAction.h; sourceTree = "<group>"; };
+		99E412441626B68D007E6DED /* SetStringAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetStringAction.m; sourceTree = "<group>"; };
+		99E4124716298BF5007E6DED /* redGalaxy2.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = redGalaxy2.plist; sourceTree = "<group>"; };
+		99E4124916298CDC007E6DED /* redGalaxy3.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = redGalaxy3.plist; sourceTree = "<group>"; };
+		99E4124B16298DD6007E6DED /* blueGalaxy2.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = blueGalaxy2.plist; sourceTree = "<group>"; };
+		99E4124D16298F5F007E6DED /* player3.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = player3.plist; sourceTree = "<group>"; };
 		DC21B8881511078F00FD4891 /* fps_images-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "fps_images-hd.png"; path = "Resources/fps_images-hd.png"; sourceTree = "<group>"; };
 		DC21B8891511078F00FD4891 /* fps_images-ipadhd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "fps_images-ipadhd.png"; path = "Resources/fps_images-ipadhd.png"; sourceTree = "<group>"; };
 		DC21B88A1511078F00FD4891 /* fps_images.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fps_images.png; path = Resources/fps_images.png; sourceTree = "<group>"; };
@@ -202,6 +223,8 @@
 			children = (
 				992BFB5E162036DF00F38D41 /* attributions.txt */,
 				992BFB5F162036DF00F38D41 /* galaxy-scene-1.aifc */,
+				9959EC161629A1D200D18089 /* galaxy-scene-2.aifc */,
+				9959EC171629A1D200D18089 /* galaxy-scene-3.aifc */,
 				992BFB60162036DF00F38D41 /* intro.aifc */,
 			);
 			path = music;
@@ -212,6 +235,8 @@
 			children = (
 				9999516D162236CC00F0953A /* RemoveFromParentAction.h */,
 				9999516E162236CC00F0953A /* RemoveFromParentAction.m */,
+				99E412431626B68D007E6DED /* SetStringAction.h */,
+				99E412441626B68D007E6DED /* SetStringAction.m */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -344,12 +369,20 @@
 				99995167162101E300F0953A /* fingertip2.plist */,
 				992BFB44161A5C8C00F38D41 /* newRound.plist */,
 				99CC0FAA1617AA030047CF43 /* blueGalaxy.plist */,
+				99E4124B16298DD6007E6DED /* blueGalaxy2.plist */,
+				9959EC141629935F00D18089 /* blueGalaxy3.plist */,
 				99CC0FA81617A9FA0047CF43 /* greenGalaxy.plist */,
+				9959EC121629911E00D18089 /* greenGalaxy2.plist */,
 				99CC0FAC1617AA0B0047CF43 /* redGalaxy.plist */,
+				99E4124716298BF5007E6DED /* redGalaxy2.plist */,
+				99E4124916298CDC007E6DED /* redGalaxy3.plist */,
 				992BFB41161A568600F38D41 /* rgbGalaxy.plist */,
 				99CC0FA516178E3E0047CF43 /* explode.plist */,
 				99CC0FAE1617BCC50047CF43 /* bang.plist */,
 				995978B71616D62300F7B4C2 /* player.plist */,
+				9959EC101629903300D18089 /* player2.plist */,
+				99E4124D16298F5F007E6DED /* player3.plist */,
+				9959EC0D1629900000D18089 /* redGalaxy2.plist */,
 				997A125D160698D400159C3B /* playerGreen.plist */,
 				997A125E160698D400159C3B /* playerRed.plist */,
 				997A125A160697E600159C3B /* playerBlue.plist */,
@@ -491,6 +524,14 @@
 				99C609971620E632006EA78A /* Default-Landscape@2x~ipad.png in Resources */,
 				99C609991620F613006EA78A /* fingertip.plist in Resources */,
 				99995168162101E300F0953A /* fingertip2.plist in Resources */,
+				99E4124816298BF5007E6DED /* redGalaxy2.plist in Resources */,
+				99E4124A16298CDC007E6DED /* redGalaxy3.plist in Resources */,
+				99E4124C16298DD6007E6DED /* blueGalaxy2.plist in Resources */,
+				99E4124E16298F5F007E6DED /* player3.plist in Resources */,
+				9959EC0E1629900000D18089 /* redGalaxy2.plist in Resources */,
+				9959EC111629903300D18089 /* player2.plist in Resources */,
+				9959EC131629911E00D18089 /* greenGalaxy2.plist in Resources */,
+				9959EC151629935F00D18089 /* blueGalaxy3.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -510,6 +551,7 @@
 				992BFB6B16203B1900F38D41 /* GameManager.m in Sources */,
 				9999516B16216A2200F0953A /* PointsLayer.m in Sources */,
 				9999516F162236CC00F0953A /* RemoveFromParentAction.m in Sources */,
+				99E412451626B68D007E6DED /* SetStringAction.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

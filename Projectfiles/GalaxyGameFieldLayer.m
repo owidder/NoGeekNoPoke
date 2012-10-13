@@ -12,7 +12,13 @@
 
 #import "CGPointExtension.h"
 
-#define GALAXY_SCENE_1_MUSIC_FILE @"galaxy-scene-1.aifc"
+#define GALAXY_SCENE_1_MUSIC_FILE_1 @"galaxy-scene-1.aifc"
+#define GALAXY_SCENE_1_MUSIC_FILE_2 @"galaxy-scene-2.aifc"
+#define GALAXY_SCENE_1_MUSIC_FILE_3 @"galaxy-scene-3.aifc"
+
+#define GALAXY_SCENE_1_MUSIC_ATTRIBUTION_1 @"Music '43 Days' by Kemi Helwa (licensed under CC BY 3.0)"
+#define GALAXY_SCENE_1_MUSIC_ATTRIBUTION_2 @"Music 'Dawn' by Beda (licensed under CC BY 3.0)"
+#define GALAXY_SCENE_1_MUSIC_ATTRIBUTION_3 @"Music 'Black Hole' by Earthling (licensed under CC BY 3.0)"
 
 #pragma mark constants
 
@@ -259,6 +265,13 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     int roundNumber;
     int roundPoints;
     int totalPoints;
+    
+    /**
+     Array with songs, attributes and its current index
+     */
+    NSArray *songFiles;
+    NSArray *attributeTexts;
+    int currentSongIndex;
 }
 
 -(void) initField;
@@ -268,19 +281,20 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 -(CCParticleSystem*) addParticleSystemAt:(CGPoint)pos withFile:(NSString*)file;
 -(void) moveMotionStreakToTouch:(UITouch*)touch;
 -(CGPoint) locationFromTouch:(UITouch*)touch;
--(void) stopRunningModeWithIsLost:(BOOL)isLost;
+-(void) stopRoundWithIsLost:(BOOL)isLost;
 -(void) explodeNode:(NSTimer*)timer;
 -(void) removeNode:(NSTimer*)timer;
 -(cpShape*) createGalaxyAtPosition:(CGPoint)position withFile:(NSString*)file;
--(void) startRound;
+-(void) startRound:(NSTimer*)timer;
+-(void) startRoundWithDelay:(float)delay;
 -(void) countDown:(NSTimer*)timer;
--(void) stopRound;
 
 -(void) updateRoundPoints:(int)p;
 -(void) updateTotalPoints:(int)p;
 -(void) updateRoundNumber:(int)rn;
 -(void) updateRemainingSeconds:(int)rs;
 
+-(void) initMusic;
 -(void) playMusic;
 
 -(BOOL) isInFreeSpace:(CGPoint)pos withFreeSpaceSize:(int)size;
@@ -320,6 +334,7 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
         uiLayer = pUiLayer;
         pointsLayer = pPointsLayer;
         [self initField];
+        [self initMusic];
         [self playMusic];
     }
     
@@ -328,17 +343,35 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 
 #pragma mark private methods
 
+-(void) initMusic
+{
+    songFiles = [NSArray arrayWithObjects:GALAXY_SCENE_1_MUSIC_FILE_1, GALAXY_SCENE_1_MUSIC_FILE_2, GALAXY_SCENE_1_MUSIC_FILE_3, nil];
+    attributeTexts = [NSArray arrayWithObjects:GALAXY_SCENE_1_MUSIC_ATTRIBUTION_1, GALAXY_SCENE_1_MUSIC_ATTRIBUTION_2, GALAXY_SCENE_1_MUSIC_ATTRIBUTION_3, nil];
+    currentSongIndex = arc4random() % [songFiles count];
+    
+    [CDSoundEngine setMixerSampleRate:CD_SAMPLE_RATE_MID];
+    [[CDAudioManager sharedManager] setResignBehavior:kAMRBStopPlay autoHandle:YES];
+    soundEngine = [SimpleAudioEngine sharedEngine];
+    
+    [[CDAudioManager sharedManager] setBackgroundMusicCompletionListener:self selector:@selector(playMusic)];
+}
+
 /**
  Start the background music
  */
 -(void) playMusic
 {
-    [CDSoundEngine setMixerSampleRate:CD_SAMPLE_RATE_MID];
-    [[CDAudioManager sharedManager] setResignBehavior:kAMRBStopPlay autoHandle:YES];
-    soundEngine = [SimpleAudioEngine sharedEngine];
-    [soundEngine preloadBackgroundMusic:GALAXY_SCENE_1_MUSIC_FILE];
-    [soundEngine playBackgroundMusic:GALAXY_SCENE_1_MUSIC_FILE];
+    NSString *songFile = [songFiles objectAtIndex:currentSongIndex];
+    [soundEngine preloadBackgroundMusic:songFile];
+    [soundEngine playBackgroundMusic:songFile];
 
+    NSString *attribution = [attributeTexts objectAtIndex:currentSongIndex];
+    attributionLabel.string = attribution;
+    
+    currentSongIndex++;
+    if(currentSongIndex >= (int)[songFiles count]){
+        currentSongIndex = 0;
+    }
 }
 
 /**
@@ -413,22 +446,22 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     shape->data = &borderShapeInfo;
     cpSpaceAddStaticShape(space, shape);
     
-    blueGalaxyStartPoint = ccp(screenSize.width/2, screenSize.height/2);
+    rgbGalaxyStartPoint = ccp(screenSize.width/2, screenSize.height/2);
     redGalaxyStartPoint = ccp(screenSize.width/2, screenSize.height-50);
     greenGalaxyStartPoint = ccp(screenSize.width-50, 50);
-    rgbGalaxyStartPoint = ccp(50, 50);
+    blueGalaxyStartPoint = ccp(50, 50);
     
-    blueGalaxyShape = [self createGalaxyAtPosition:blueGalaxyStartPoint withFile:@"rgbGalaxy.plist"];
-    redGalaxyShape = [self createGalaxyAtPosition:redGalaxyStartPoint withFile:@"redGalaxy.plist"];
+    blueGalaxyShape = [self createGalaxyAtPosition:blueGalaxyStartPoint withFile:@"blueGalaxy.plist"];
+    redGalaxyShape = [self createGalaxyAtPosition:redGalaxyStartPoint withFile:@"redGalaxy3.plist"];
     greenGalaxyShape = [self createGalaxyAtPosition:greenGalaxyStartPoint withFile:@"greenGalaxy.plist"];
-    rgbGalaxyShape = [self createGalaxyAtPosition:rgbGalaxyStartPoint withFile:@"blueGalaxy.plist"];
+    rgbGalaxyShape = [self createGalaxyAtPosition:rgbGalaxyStartPoint withFile:@"rgbGalaxy.plist"];
     
     //		[KKInput sharedInput].accelerometerActive = YES;
     
     gameMode = kNotStarted;
     playerGalaxyCollisionHappened = NO;
     
-    attributionLabel =  [CCLabelTTF labelWithString:@"Music '43 Days' by Kemi Helwa (licensed under CC BY 3.0)" fontName:@"AmericanTypewriter-Bold" fontSize:10];
+    attributionLabel =  [CCLabelTTF labelWithString:@"" fontName:@"AmericanTypewriter-Bold" fontSize:10];
     attributionLabel.anchorPoint = ccp(0, 0);
     attributionLabel.position = ccp(10, 10);
     [self addChild:attributionLabel];
@@ -516,42 +549,6 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
         
         [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(removeNode:) userInfo:explosion repeats:NO];
     }
-}
-
-/**
- Stop the running mode:
- - Remove the player (with an explosion)
- - Use different particle effects dependant on isLost
- */
--(void) stopRunningModeWithIsLost:(BOOL)isLost {
-    if(playerShape != nil) {
-        cpSpaceRemoveShape(space, playerShape);
-        cpShapeFree(playerShape);
-    }
-    if(playerBody != nil) {
-        cpSpaceRemoveBody(space, playerBody);
-        cpBodyFree(playerBody);
-    }
-    
-    playerBody = nil;
-    playerShape = nil;
-    
-    NodeAndFilename *userInfo = [[NodeAndFilename alloc] init];
-    userInfo.node = playerNode;
-    playerNode = nil;
-    float waitTime = 1.0;
-    if(isLost) {
-        userInfo.filename = @"bang.plist";
-        waitTime = 0.1;
-    }
-    else {
-        userInfo.filename = @"explode.plist";
-        waitTime = 0.1;
-    }
-    
-    [NSTimer scheduledTimerWithTimeInterval:waitTime target:self selector:@selector(explodeNode:) userInfo:userInfo repeats:NO];
-    
-    gameMode = kIdle;
 }
 
 /**
@@ -799,7 +796,7 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 {
     [self updateTotalPoints:0];
     [self updateRoundNumber:0];
-    [self startRound];
+    [self startRound:nil];
 }
 
 -(void) newGame
@@ -825,19 +822,63 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 {
     [self updateRemainingSeconds:--remainingSeconds];
     if(remainingSeconds == 0) {
+        [timer invalidate];
         [self updateTotalPoints:totalPoints + roundPoints];
         gameMode = kRoundEnded;
     }
 }
 
--(void) stopRound
-{
-    [self stopRunningModeWithIsLost:NO];
-    [pointsLayer removeAll];
+/**
+ Stop the running mode:
+ - Remove the player (with an explosion)
+ - Use different particle effects dependant on isLost
+ */
+-(void) stopRoundWithIsLost:(BOOL)isLost {
+    [pointsLayer hideAllLabels];
+    if(isLost) {
+        [pointsLayer lose];
+    }
+    else {
+        [pointsLayer win];
+    }
+    
+    if(playerShape != nil) {
+        cpSpaceRemoveShape(space, playerShape);
+        cpShapeFree(playerShape);
+    }
+    if(playerBody != nil) {
+        cpSpaceRemoveBody(space, playerBody);
+        cpBodyFree(playerBody);
+    }
+    
+    playerBody = nil;
+    playerShape = nil;
+    
+    NodeAndFilename *userInfo = [[NodeAndFilename alloc] init];
+    userInfo.node = playerNode;
+    playerNode = nil;
+    float waitTime = 1.0;
+    if(isLost) {
+        userInfo.filename = @"bang.plist";
+        waitTime = 0.1;
+    }
+    else {
+        userInfo.filename = @"explode.plist";
+        waitTime = 0.1;
+    }
+    
+    [NSTimer scheduledTimerWithTimeInterval:waitTime target:self selector:@selector(explodeNode:) userInfo:userInfo repeats:NO];
 }
 
--(void) startRound
+-(void) startRoundWithDelay:(float)delay
 {
+    [NSTimer scheduledTimerWithTimeInterval:delay target:self selector:@selector(startRound:) userInfo:nil repeats:NO];
+}
+
+-(void) startRound:(NSTimer*)timer
+{
+    [timer invalidate];
+    
     [self updateRoundPoints:0];
     [self updateRoundNumber:++roundNumber];
     [self updateRemainingSeconds:ROUND_LENGTH_IN_SECONDS];
@@ -927,8 +968,9 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
         }
     }
     else if(gameMode == kRoundEnded) {
-        [self stopRound];
-        [self startRound];
+        gameMode = kNotStarted;
+        [self stopRoundWithIsLost:NO];
+        [self startRoundWithDelay:1.0];
     }
     
 	float timeStep = 0.03f;
@@ -942,14 +984,14 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 
     if(playerGalaxyCollisionHappened) {
         playerGalaxyCollisionHappened = NO;
-        [self stopRunningModeWithIsLost:YES];
-        [self startRound];
+        [self stopRoundWithIsLost:YES];
+        [self startRoundWithDelay:1.0];
     }
     
     if(playerBorderCollisionHappened) {
         playerBorderCollisionHappened = NO;
         [self updateRoundPoints:roundPoints + eachShapeData->distancePoints];
-        [pointsLayer removeCurrentGalaxyLabel];
+        [pointsLayer hideCurrentGalaxyLabel];
         [pointsLayer showRoundPoints:eachShapeData->distancePoints atPosition:playerBody->p];
         eachShapeData->distancePoints = 0;
     }
