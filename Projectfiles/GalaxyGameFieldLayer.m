@@ -285,6 +285,7 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 -(void) explodeNode:(NSTimer*)timer;
 -(void) removeNode:(NSTimer*)timer;
 -(cpShape*) createGalaxyAtPosition:(CGPoint)position withFile:(NSString*)file;
+-(cpShape*) createSpriteAtPosition:(CGPoint)position withImageFile:(NSString*)imageFile andPhysicsFile:(NSString*)physicsFile;
 -(void) startRound:(NSTimer*)timer;
 -(void) startRoundWithDelay:(float)delay;
 -(void) countDown:(NSTimer*)timer;
@@ -342,37 +343,6 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 }
 
 #pragma mark private methods
-
--(void) initMusic
-{
-    songFiles = [NSArray arrayWithObjects:GALAXY_SCENE_1_MUSIC_FILE_1, GALAXY_SCENE_1_MUSIC_FILE_2, GALAXY_SCENE_1_MUSIC_FILE_3, nil];
-    attributeTexts = [NSArray arrayWithObjects:GALAXY_SCENE_1_MUSIC_ATTRIBUTION_1, GALAXY_SCENE_1_MUSIC_ATTRIBUTION_2, GALAXY_SCENE_1_MUSIC_ATTRIBUTION_3, nil];
-    currentSongIndex = arc4random() % [songFiles count];
-    
-    [CDSoundEngine setMixerSampleRate:CD_SAMPLE_RATE_MID];
-    [[CDAudioManager sharedManager] setResignBehavior:kAMRBStopPlay autoHandle:YES];
-    soundEngine = [SimpleAudioEngine sharedEngine];
-    
-    [[CDAudioManager sharedManager] setBackgroundMusicCompletionListener:self selector:@selector(playMusic)];
-}
-
-/**
- Start the background music
- */
--(void) playMusic
-{
-    NSString *songFile = [songFiles objectAtIndex:currentSongIndex];
-    [soundEngine preloadBackgroundMusic:songFile];
-    [soundEngine playBackgroundMusic:songFile];
-
-    NSString *attribution = [attributeTexts objectAtIndex:currentSongIndex];
-    attributionLabel.string = attribution;
-    
-    currentSongIndex++;
-    if(currentSongIndex >= (int)[songFiles count]){
-        currentSongIndex = 0;
-    }
-}
 
 /**
  Init the playing field
@@ -489,6 +459,10 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
     CCMenu *menu = [CCMenu menuWithItems:newGameMenuItem, nil];
     menu.position = CGPointZero;
     [self addChild:menu];
+}
+
+-(cpShape*)createSpriteAtPosition:(CGPoint)position withImageFile:(NSString *)imageFile andPhysicsFile:(NSString *)physicsFile {
+    
 }
 
 /**
@@ -955,6 +929,39 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
 //        if(endpos.x > 0 && endpos.x < screenSize.width && endpos.y > 0 && endpos.y < screenSize.height) {
 //        }
     }
+}
+
+#pragma mark music handling
+
+-(void) initMusic
+{
+    songFiles = [NSArray arrayWithObjects:GALAXY_SCENE_1_MUSIC_FILE_1, GALAXY_SCENE_1_MUSIC_FILE_2, GALAXY_SCENE_1_MUSIC_FILE_3, nil];
+    attributeTexts = [NSArray arrayWithObjects:GALAXY_SCENE_1_MUSIC_ATTRIBUTION_1, GALAXY_SCENE_1_MUSIC_ATTRIBUTION_2, GALAXY_SCENE_1_MUSIC_ATTRIBUTION_3, nil];
+    currentSongIndex = arc4random() % [songFiles count];
+    
+    [CDSoundEngine setMixerSampleRate:CD_SAMPLE_RATE_MID];
+    [[CDAudioManager sharedManager] setResignBehavior:kAMRBStopPlay autoHandle:YES];
+    soundEngine = [SimpleAudioEngine sharedEngine];
+}
+
+/**
+ Start the background music
+ */
+-(void) playMusic
+{
+    NSString *songFile = [songFiles objectAtIndex:currentSongIndex];
+    [soundEngine preloadBackgroundMusic:songFile];
+    [soundEngine playBackgroundMusic:songFile];
+    
+    NSString *attribution = [attributeTexts objectAtIndex:currentSongIndex];
+    attributionLabel.string = attribution;
+    
+    currentSongIndex++;
+    if(currentSongIndex >= (int)[songFiles count]){
+        currentSongIndex = 0;
+    }
+    
+    [[CDAudioManager sharedManager] setBackgroundMusicCompletionListener:self selector:@selector(playMusic)];
 }
 
 #pragma mark CCNode

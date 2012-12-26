@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		99029E47168AD8E00062BE13 /* PileGameLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 99029E46168AD8E00062BE13 /* PileGameLayer.m */; };
+		99029E4B168ADECE0062BE13 /* GCpShapeCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 99029E4A168ADECE0062BE13 /* GCpShapeCache.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		99029E4D168AE4F40062BE13 /* ball_rs.png in Resources */ = {isa = PBXBuildFile; fileRef = 99029E4C168AE4F40062BE13 /* ball_rs.png */; };
+		99029E4F168AE4FE0062BE13 /* cat_rs.png in Resources */ = {isa = PBXBuildFile; fileRef = 99029E4E168AE4FE0062BE13 /* cat_rs.png */; };
+		99029E51168AE5090062BE13 /* icons.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99029E50168AE5090062BE13 /* icons.plist */; };
 		99121C3A1605C81900A15CBB /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = 99121C391605C81900A15CBB /* fire.png */; };
 		992BFB42161A568600F38D41 /* rgbGalaxy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB41161A568600F38D41 /* rgbGalaxy.plist */; };
 		992BFB45161A5C8C00F38D41 /* newRound.plist in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB44161A5C8C00F38D41 /* newRound.plist */; };
@@ -87,6 +92,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		99029E45168AD8E00062BE13 /* PileGameLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PileGameLayer.h; sourceTree = "<group>"; };
+		99029E46168AD8E00062BE13 /* PileGameLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PileGameLayer.m; sourceTree = "<group>"; };
+		99029E49168ADECE0062BE13 /* GCpShapeCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCpShapeCache.h; path = PhysicsEditor/GCpShapeCache.h; sourceTree = "<group>"; };
+		99029E4A168ADECE0062BE13 /* GCpShapeCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCpShapeCache.m; path = PhysicsEditor/GCpShapeCache.m; sourceTree = "<group>"; };
+		99029E4C168AE4F40062BE13 /* ball_rs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ball_rs.png; sourceTree = "<group>"; };
+		99029E4E168AE4FE0062BE13 /* cat_rs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cat_rs.png; sourceTree = "<group>"; };
+		99029E50168AE5090062BE13 /* icons.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = icons.plist; sourceTree = "<group>"; };
 		99121C391605C81900A15CBB /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fire.png; sourceTree = "<group>"; };
 		992BFB41161A568600F38D41 /* rgbGalaxy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = rgbGalaxy.plist; sourceTree = "<group>"; };
 		992BFB44161A5C8C00F38D41 /* newRound.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = newRound.plist; sourceTree = "<group>"; };
@@ -211,6 +223,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		99029E43168AD8870062BE13 /* PileGame */ = {
+			isa = PBXGroup;
+			children = (
+				99029E45168AD8E00062BE13 /* PileGameLayer.h */,
+				99029E46168AD8E00062BE13 /* PileGameLayer.m */,
+			);
+			name = PileGame;
+			sourceTree = "<group>";
+		};
+		99029E48168ADEB40062BE13 /* PhysicsEditor */ = {
+			isa = PBXGroup;
+			children = (
+				99029E49168ADECE0062BE13 /* GCpShapeCache.h */,
+				99029E4A168ADECE0062BE13 /* GCpShapeCache.m */,
+			);
+			name = PhysicsEditor;
+			sourceTree = "<group>";
+		};
 		992BFB5916202ED800F38D41 /* Intro */ = {
 			isa = PBXGroup;
 			children = (
@@ -351,6 +381,8 @@
 		DCC1A38C13A94F1A005BD75D /* Projectfiles */ = {
 			isa = PBXGroup;
 			children = (
+				99029E48168ADEB40062BE13 /* PhysicsEditor */,
+				99029E43168AD8870062BE13 /* PileGame */,
 				9999516C1622369F00F0953A /* Util */,
 				992BFB6916203B1900F38D41 /* GameManager.h */,
 				992BFB6A16203B1900F38D41 /* GameManager.m */,
@@ -367,6 +399,9 @@
 		DCC1A39413A94F1A005BD75D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				99029E4C168AE4F40062BE13 /* ball_rs.png */,
+				99029E4E168AE4FE0062BE13 /* cat_rs.png */,
+				99029E50168AE5090062BE13 /* icons.plist */,
 				99C609981620F613006EA78A /* fingertip.plist */,
 				99995167162101E300F0953A /* fingertip2.plist */,
 				992BFB44161A5C8C00F38D41 /* newRound.plist */,
@@ -536,6 +571,9 @@
 				9959EC111629903300D18089 /* player2.plist in Resources */,
 				9959EC131629911E00D18089 /* greenGalaxy2.plist in Resources */,
 				9959EC151629935F00D18089 /* blueGalaxy3.plist in Resources */,
+				99029E4D168AE4F40062BE13 /* ball_rs.png in Resources */,
+				99029E4F168AE4FE0062BE13 /* cat_rs.png in Resources */,
+				99029E51168AE5090062BE13 /* icons.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -556,6 +594,8 @@
 				9999516B16216A2200F0953A /* PointsLayer.m in Sources */,
 				9999516F162236CC00F0953A /* RemoveFromParentAction.m in Sources */,
 				99E412451626B68D007E6DED /* SetStringAction.m in Sources */,
+				99029E47168AD8E00062BE13 /* PileGameLayer.m in Sources */,
+				99029E4B168ADECE0062BE13 /* GCpShapeCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

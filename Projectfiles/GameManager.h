@@ -12,5 +12,6 @@
 
 +(void) startIntro;
 +(void) startGalaxyScene1;
++(void)startPileGameScene;
 
 @end

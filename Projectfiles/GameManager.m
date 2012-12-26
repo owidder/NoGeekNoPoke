@@ -9,6 +9,7 @@
 #import "GameManager.h"
 #import "GalaxyGameLayer.h"
 #import "IntroLayer.h"
+#import "PileGameLayer.h"
 
 @implementation GameManager
 
@@ -20,6 +21,10 @@
 +(void) startGalaxyScene1
 {
     [[CCDirector sharedDirector] replaceScene:[GalaxyGameLayer scene]];
+}
+
++(void)startPileGameScene {
+    [[CCDirector sharedDirector] replaceScene:[PileGameLayer scene]];
 }
 
 @end

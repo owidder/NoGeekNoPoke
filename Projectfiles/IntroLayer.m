@@ -103,7 +103,7 @@
 -(void) startGame
 {
     [soundEngine stopBackgroundMusic];
-    [GameManager startGalaxyScene1];
+    [GameManager startPileGameScene];
 }
 
 @end
