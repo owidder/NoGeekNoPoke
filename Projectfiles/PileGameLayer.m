@@ -19,15 +19,38 @@ enum {
 	kTagBatchNode = 1,
 };
 
+#pragma mark structs
+
+// used for data exchange with the testBodyForTouchPosition callback
+typedef struct {
+    // the current touch location is inside this body
+    cpBody *touchedBody;
+    CGPoint touchLocation;
+} TouchDetectionStruct;
+
 #pragma mark C Callbacks
 
 static void eachBody(cpBody *body, void *data)
 {
-	CCSprite *sprite = (__bridge CCSprite*) body->data;
+    BodyData *bd = (BodyData*)body->data;
+	CCSprite *sprite = (__bridge CCSprite*) bd->sprite;
 	if( sprite )
     {
 		[sprite setPosition: body->p];
 		[sprite setRotation: (float) CC_RADIANS_TO_DEGREES( -body->a )];
+	}
+}
+
+// search for the body the current touch location is in
+// the found body is put into data->touchedBody
+static void testBodyForTouchLocation(cpBody *body, void *data) {
+    BodyData *bd = body->data;
+	CCSprite *sprite = (__bridge CCSprite*) bd->sprite;
+    TouchDetectionStruct *tds = (TouchDetectionStruct*)data;
+	if(sprite) {
+        if(CGRectContainsPoint(sprite.boundingBox, tds->touchLocation)) {
+            tds->touchedBody = body;
+        }
 	}
 }
 
@@ -40,8 +63,9 @@ static void eachBody(cpBody *body, void *data)
 }
 
 -(void)step:(ccTime)dt;
--(void)addNewSprite:(float)x y:(float)y;
+-(void)addNewSpriteAtX:(float)x andY:(float)y;
 -(void)nextItem;
+-(cpBody*)touchedBody:(CGPoint)touchLocation;
 
 @end
 
@@ -126,8 +150,6 @@ NSString *itemNames[] = {
         //        [[GCpShapeCache sharedShapeCache] addShapesWithFile:@"shapedefs.plist"];
         [[GCpShapeCache sharedShapeCache] addShapesWithFile:@"icons.plist"];
         
-		[self addNewSprite:200 y:200];
-		
 		[self schedule:@selector(step:)];
         
         itemTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(nextItem) userInfo:nil repeats:YES];
@@ -151,10 +173,20 @@ NSString *itemNames[] = {
 {
 	for( UITouch *touch in touches ) {
 		CGPoint location = [touch locationInView: [touch view]];
+		location = [[CCDirector sharedDirector] convertToGL:location];
+        cpBody *touchedBody = [self touchedBody:location];
+        if(touchedBody) {
+            BodyData *bd = (BodyData*)touchedBody->data;
+            if(bd && bd->shape) {
+                cpSpaceRemoveShape(space, bd->shape);
+            }
+            if(bd && bd->sprite) {
+                [self removeChild:(__bridge CCSprite*)bd->sprite cleanup:YES];
+            }
+            cpSpaceRemoveBody(space, touchedBody);
+        }
 		
-		location = [[CCDirector sharedDirector] convertToGL: location];
-		
-        [self addNewSprite: location.x y:location.y];
+//        [self addNewSprite: location.x y:location.y];
 	}
 }
 
@@ -178,6 +210,19 @@ NSString *itemNames[] = {
 
 #pragma mark private methods
 
+-(cpBody*)touchedBody:(CGPoint)touchLocation {
+    cpBody *body = nil;
+    
+    TouchDetectionStruct *tds = malloc(sizeof(TouchDetectionStruct));
+    tds->touchedBody = nil;
+    tds->touchLocation = touchLocation;
+    cpSpaceEachBody(space, &testBodyForTouchLocation, tds);
+    body = tds->touchedBody;
+    free(tds);
+    
+    return body;
+}
+
 -(void) step:(ccTime)delta
 {
 	int steps = 2;
@@ -197,15 +242,15 @@ NSString *itemNames[] = {
     
     int x = rand()%(int)(wins.width);
     int y = rand()%300 + 500;
-    [self addNewSprite:x y:y];
+    [self addNewSpriteAtX:x andY:y];
     
-    if(ctr++ >= 150) {
+    if(ctr++ >= 100) {
         [itemTimer invalidate];
         itemTimer = nil;
     }
 }
 
--(void)addNewSprite: (float)x y:(float)y
+-(void)addNewSpriteAtX:(float)x andY:(float)y
 {
     //    NSString *name = names[rand()%7];
     NSString *name = itemNames[rand()%8];

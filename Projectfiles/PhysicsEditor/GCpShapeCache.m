@@ -234,7 +234,9 @@ typedef enum
     body->p = bd->anchorPoint;
     
     // set the data
-    body->data = data;
+    BodyData *bodyData = malloc(sizeof(BodyData));
+    bodyData->sprite = data;
+    body->data = bodyData;
 
     // add space to body
     cpSpaceAddBody(space, body);
@@ -255,6 +257,8 @@ typedef enum
             shape->layers = fd->layers;
             shape->sensor = fd->isSensor;
             
+            bodyData->shape = shape;
+            
             // add shape to space
             cpSpaceAddShape(space, shape);            
         }
@@ -274,6 +278,8 @@ typedef enum
                 shape->group = fd->group;
                 shape->layers = fd->layers;
                 shape->sensor = fd->isSensor;
+                
+                bodyData->shape = shape;
                 
                 // add shape to space
                 cpSpaceAddShape(space, shape);            

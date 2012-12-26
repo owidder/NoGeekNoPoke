@@ -34,6 +34,14 @@
 #import <Foundation/Foundation.h>
 #import "chipmunk.h"
 
+// data struct of a body
+typedef struct {
+    cpShape *shape;
+    void *sprite;
+} BodyData;
+
+
+
 /**
  * Shape cache 
  * This class holds the shapes and makes them accessible 
