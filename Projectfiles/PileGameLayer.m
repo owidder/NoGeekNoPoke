@@ -85,7 +85,7 @@ static void testBodyForTouchLocation(cpBody *body, void *data) {
 }
 
 -(void)step:(ccTime)dt;
--(void)addNewSpriteAtX:(float)x andY:(float)y;
+-(void)addNewSpriteAtX:(float)x andY:(float)y withName:(NSString*)name;
 -(void)nextItem;
 -(cpBody*)touchedBody:(CGPoint)touchLocation;
 
@@ -268,19 +268,29 @@ static void testBodyForTouchLocation(cpBody *body, void *data) {
     
     int x = rand()%(int)(wins.width);
     int y = rand()%300 + 500;
-    [self addNewSpriteAtX:x andY:y];
     
-    if(ctr++ >= 100) {
+    ctr++;
+    
+    if(ctr < 50) {
+        [self addNewSpriteAtX:x andY:y withName:@"ball_rs"];
+    }
+    else {
+        int t = rand()%10;
+        if(t == 1) {
+            [self addNewSpriteAtX:x andY:y withName:@"cat_rs"];
+        }
+        else {
+            [self addNewSpriteAtX:x andY:y withName:@"ball_rs"];
+        }
+    }
+    
+    if(ctr >= 100) {
         [itemTimer invalidate];
         itemTimer = nil;
     }
 }
 
--(void)addNewSpriteAtX:(float)x andY:(float)y
-{
-    //    NSString *name = names[rand()%7];
-    NSString *name = itemNames[rand()%8];
-    
+-(void)addNewSpriteAtX:(float)x andY:(float)y withName:(NSString *)name {
     // create and add sprite
 	CCSprite *sprite = [CCSprite spriteWithFile:[NSString stringWithFormat:@"%@.png", name]];
 	[self addChild:sprite];
