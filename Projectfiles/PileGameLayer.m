@@ -8,6 +8,7 @@
 
 #import "PileGameLayer.h"
 #import "GCpShapeCache.h"
+#import "NodeUtil.h"
 
 #define kAccelerationFilterFactor 0.05f
 
@@ -28,14 +29,26 @@ typedef struct {
     CGPoint touchLocation;
 } TouchDetectionStruct;
 
+#pragma mark static data
+
+NSString *itemNames[] = {
+    @"cat_rs",
+    @"ball_rs",
+    @"ball_rs",
+    @"ball_rs",
+    @"ball_rs",
+    @"ball_rs",
+    @"ball_rs",
+    @"ball_rs"
+};
+
 #pragma mark C Callbacks
 
-static void eachBody(cpBody *body, void *data)
-{
+// callback during step
+static void eachBody(cpBody *body, void *data) {
     BodyData *bd = (BodyData*)body->data;
 	CCSprite *sprite = (__bridge CCSprite*) bd->sprite;
-	if( sprite )
-    {
+	if(sprite) {
 		[sprite setPosition: body->p];
 		[sprite setRotation: (float) CC_RADIANS_TO_DEGREES( -body->a )];
 	}
@@ -58,8 +71,17 @@ static void testBodyForTouchLocation(cpBody *body, void *data) {
 
 @interface PileGameLayer ()
 {
+    // timer for the creation of the items at the beginning
     NSTimer *itemTimer;
+    
+    // body to remove during the next step
+    cpBody *bodyToRemove;
+    
+    // the current chipmunk space
     cpSpace *space;
+    
+    // for some node related useful stuff
+    NodeUtil *nodeUtil;
 }
 
 -(void)step:(ccTime)dt;
@@ -72,19 +94,6 @@ static void testBodyForTouchLocation(cpBody *body, void *data) {
 #pragma mark implementation
 
 @implementation PileGameLayer
-
-#pragma mark data
-
-NSString *itemNames[] = {
-    @"cat_rs",
-    @"ball_rs",
-    @"ball_rs",
-    @"ball_rs",
-    @"ball_rs",
-    @"ball_rs",
-    @"ball_rs",
-    @"ball_rs"
-};
 
 #pragma mark class methods
 
@@ -107,11 +116,15 @@ NSString *itemNames[] = {
 
 -(void)dealloc {
     cpSpaceFree(space);
+    nodeUtil = nil;
 }
 
 -(id)init
 {
 	if( (self=[super init])) {
+        
+        bodyToRemove = nil;
+        nodeUtil = [[NodeUtil alloc] init];
 		
 		self.isTouchEnabled = YES;
 		self.isAccelerometerEnabled = YES;
@@ -176,14 +189,11 @@ NSString *itemNames[] = {
 		location = [[CCDirector sharedDirector] convertToGL:location];
         cpBody *touchedBody = [self touchedBody:location];
         if(touchedBody) {
-            BodyData *bd = (BodyData*)touchedBody->data;
-            if(bd && bd->shape) {
-                cpSpaceRemoveShape(space, bd->shape);
-            }
+            bodyToRemove = touchedBody;
+            BodyData *bd = touchedBody->data;
             if(bd && bd->sprite) {
-                [self removeChild:(__bridge CCSprite*)bd->sprite cleanup:YES];
+                [nodeUtil explodeNode:(__bridge CCNode *)(bd->sprite) ofLayer:self withExplosionPlistFilename:@"bang.plist"];
             }
-            cpSpaceRemoveBody(space, touchedBody);
         }
 		
 //        [self addNewSprite: location.x y:location.y];
@@ -223,16 +233,32 @@ NSString *itemNames[] = {
     return body;
 }
 
--(void) step:(ccTime)delta
-{
+-(void) step:(ccTime)delta {
+    // we do not secure this with a semaphore
+    // there may be weird edge cases, where bodyToRemove is
+    // changed during the run of this method
+    // To mitigate this, we copy the bodyToRemove in a local variable
+    
+    cpBody *localBodyToRemove = bodyToRemove;
+    bodyToRemove = nil;
+
 	int steps = 2;
 	CGFloat dt = delta/(CGFloat)steps;
 	
-	for(int i=0; i<steps; i++)
-    {
+	for(int i=0; i<steps; i++) {
 		cpSpaceStep(space, dt);
 	}
     cpSpaceEachBody(space, &eachBody, nil);
+    
+    if(localBodyToRemove) {
+        BodyData *bd = (BodyData*)localBodyToRemove->data;
+        if(bd && bd->shape) {
+            cpSpaceRemoveShape(space, bd->shape);
+            cpShapeFree(bd->shape);
+        }
+        cpSpaceRemoveBody(space, localBodyToRemove);
+        cpBodyFree(localBodyToRemove);
+    }
 }
 
 -(void)nextItem {

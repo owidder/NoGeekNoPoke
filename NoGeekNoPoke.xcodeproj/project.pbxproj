@@ -12,6 +12,7 @@
 		99029E4D168AE4F40062BE13 /* ball_rs.png in Resources */ = {isa = PBXBuildFile; fileRef = 99029E4C168AE4F40062BE13 /* ball_rs.png */; };
 		99029E4F168AE4FE0062BE13 /* cat_rs.png in Resources */ = {isa = PBXBuildFile; fileRef = 99029E4E168AE4FE0062BE13 /* cat_rs.png */; };
 		99029E51168AE5090062BE13 /* icons.plist in Resources */ = {isa = PBXBuildFile; fileRef = 99029E50168AE5090062BE13 /* icons.plist */; };
+		99029E55168C44CD0062BE13 /* NodeUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 99029E54168C44CD0062BE13 /* NodeUtil.m */; };
 		99121C3A1605C81900A15CBB /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = 99121C391605C81900A15CBB /* fire.png */; };
 		992BFB42161A568600F38D41 /* rgbGalaxy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB41161A568600F38D41 /* rgbGalaxy.plist */; };
 		992BFB45161A5C8C00F38D41 /* newRound.plist in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB44161A5C8C00F38D41 /* newRound.plist */; };
@@ -99,6 +100,8 @@
 		99029E4C168AE4F40062BE13 /* ball_rs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ball_rs.png; sourceTree = "<group>"; };
 		99029E4E168AE4FE0062BE13 /* cat_rs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cat_rs.png; sourceTree = "<group>"; };
 		99029E50168AE5090062BE13 /* icons.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = icons.plist; sourceTree = "<group>"; };
+		99029E53168C44CD0062BE13 /* NodeUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NodeUtil.h; sourceTree = "<group>"; };
+		99029E54168C44CD0062BE13 /* NodeUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NodeUtil.m; sourceTree = "<group>"; };
 		99121C391605C81900A15CBB /* fire.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fire.png; sourceTree = "<group>"; };
 		992BFB41161A568600F38D41 /* rgbGalaxy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = rgbGalaxy.plist; sourceTree = "<group>"; };
 		992BFB44161A5C8C00F38D41 /* newRound.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = newRound.plist; sourceTree = "<group>"; };
@@ -241,6 +244,15 @@
 			name = PhysicsEditor;
 			sourceTree = "<group>";
 		};
+		99029E52168C44A80062BE13 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				99029E53168C44CD0062BE13 /* NodeUtil.h */,
+				99029E54168C44CD0062BE13 /* NodeUtil.m */,
+			);
+			name = util;
+			sourceTree = "<group>";
+		};
 		992BFB5916202ED800F38D41 /* Intro */ = {
 			isa = PBXGroup;
 			children = (
@@ -381,6 +393,7 @@
 		DCC1A38C13A94F1A005BD75D /* Projectfiles */ = {
 			isa = PBXGroup;
 			children = (
+				99029E52168C44A80062BE13 /* util */,
 				99029E48168ADEB40062BE13 /* PhysicsEditor */,
 				99029E43168AD8870062BE13 /* PileGame */,
 				9999516C1622369F00F0953A /* Util */,
@@ -596,6 +609,7 @@
 				99E412451626B68D007E6DED /* SetStringAction.m in Sources */,
 				99029E47168AD8E00062BE13 /* PileGameLayer.m in Sources */,
 				99029E4B168ADECE0062BE13 /* GCpShapeCache.m in Sources */,
+				99029E55168C44CD0062BE13 /* NodeUtil.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

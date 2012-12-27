@@ -510,7 +510,7 @@ static void contactEnd(cpArbiter* arbiter, cpSpace* space, void* data)
  Do an explosion of the position of the node which is in the user info of the given timer
  The explosin type depends on the gameMode (idle or lost)
  */
--(void) explodeNode:(NSTimer*)timer;
+-(void) explodeNode:(NSTimer*)timer
 {
     NodeAndFilename *nodeAndFilename = (NodeAndFilename*) timer.userInfo;
     
