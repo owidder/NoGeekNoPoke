@@ -192,7 +192,7 @@ static void testBodyForTouchLocation(cpBody *body, void *data) {
             bodyToRemove = touchedBody;
             BodyData *bd = touchedBody->data;
             if(bd && bd->sprite) {
-                [nodeUtil explodeNode:(__bridge CCNode *)(bd->sprite) ofLayer:self withExplosionPlistFilename:@"bang.plist"];
+                [nodeUtil shrinkAndExplodeNode:(__bridge CCNode *)(bd->sprite) ofLayer:self withExplosionPlistFilename:@"puff.plist"];
             }
         }
 		
@@ -251,13 +251,15 @@ static void testBodyForTouchLocation(cpBody *body, void *data) {
     cpSpaceEachBody(space, &eachBody, nil);
     
     if(localBodyToRemove) {
-        BodyData *bd = (BodyData*)localBodyToRemove->data;
-        if(bd && bd->shape) {
-            cpSpaceRemoveShape(space, bd->shape);
-            cpShapeFree(bd->shape);
+        cpSpaceLock(space); {
+            BodyData *bd = (BodyData*)localBodyToRemove->data;
+            if(bd && bd->shape) {
+                cpSpaceRemoveShape(space, bd->shape);
+                cpShapeFree(bd->shape);
+            }
+            cpSpaceRemoveBody(space, localBodyToRemove);
+            cpBodyFree(localBodyToRemove);
         }
-        cpSpaceRemoveBody(space, localBodyToRemove);
-        cpBodyFree(localBodyToRemove);
     }
 }
 

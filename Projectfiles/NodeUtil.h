@@ -13,6 +13,7 @@
 
 
 -(void)explodeNode:(CCNode*)node ofLayer:(CCLayer*)layer withExplosionPlistFilename:(NSString*)filename;
+-(void)shrinkAndExplodeNode:(CCNode*)node ofLayer:(CCLayer*)layer withExplosionPlistFilename:(NSString*)filename;
 
 @end
 

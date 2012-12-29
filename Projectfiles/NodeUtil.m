@@ -6,6 +6,7 @@
 //
 
 #import "NodeUtil.h"
+#import "cocos2d.h"
 
 #pragma mark NodeUtilUserData
 
@@ -24,12 +25,10 @@
 #pragma mark NodeUtil
 
 @interface NodeUtil () {
-    
 }
 
--(void) removeNode:(NSTimer*)timer;
-
--(void) explodeNode:(NSTimer*)timer;
+-(void)removeNodeWithTimer:(NSTimer*)timer;
+-(void)explodeNodeWithTimer:(NSTimer*)timer;
 
 @end
 
@@ -43,13 +42,24 @@
     userData.layer = layer;
     userData.node = node;
     
-    [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(explodeNode:) userInfo:userData repeats:NO];
+    [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(explodeNodeWithTimer:) userInfo:userData repeats:NO];
 }
 
+-(void)shrinkAndExplodeNode:(CCNode *)node ofLayer:(CCLayer *)layer withExplosionPlistFilename:(NSString *)filename {
+    NodeUtilUserData *userData = [[NodeUtilUserData alloc] init];
+    userData.filename = filename;
+    userData.layer = layer;
+    userData.node = node;
+    
+    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(explodeNodeWithTimer:) userInfo:userData repeats:NO];
+
+    CCFiniteTimeAction *shrinkAction = [CCScaleTo actionWithDuration:0.5 scale:0.01];
+    [node runAction:shrinkAction];
+}
 
 #pragma mark private methods
 
--(void) removeNode:(NSTimer*)timer {
+-(void) removeNodeWithTimer:(NSTimer*)timer {
     
     NodeUtilUserData *userData = (NodeUtilUserData*) timer.userInfo;
     
@@ -59,16 +69,16 @@
     }
 }
 
--(void) explodeNode:(NSTimer*)timer {
-    NodeUtilUserData *userData = (NodeUtilUserData*) timer.userInfo;
+-(void) explodeNodeWithTimer:(NSTimer*)timer {
+    NodeUtilUserData *ud = (NodeUtilUserData*) timer.userInfo;
     
     CCParticleSystemQuad *explosion;
-    explosion = [CCParticleSystemQuad particleWithFile:userData.filename];
-    explosion.position = userData.node.position;
-    [userData.layer removeChild:userData.node cleanup:YES];
-    [userData.layer addChild:explosion];
+    explosion = [CCParticleSystemQuad particleWithFile:ud.filename];
+    explosion.position = ud.node.position;
+    [ud.layer removeChild:ud.node cleanup:YES];
+    [ud.layer addChild:explosion];
     
-    [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(removeNode:) userInfo:userData repeats:NO];
+    [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(removeNodeWithTimer:) userInfo:ud repeats:NO];
 }
 
 @end

@@ -28,6 +28,9 @@
 		992BFB62162036DF00F38D41 /* galaxy-scene-1.aifc in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB5F162036DF00F38D41 /* galaxy-scene-1.aifc */; };
 		992BFB63162036DF00F38D41 /* intro.aifc in Resources */ = {isa = PBXBuildFile; fileRef = 992BFB60162036DF00F38D41 /* intro.aifc */; };
 		992BFB6B16203B1900F38D41 /* GameManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 992BFB6A16203B1900F38D41 /* GameManager.m */; };
+		9943EF2F168D94F800B12BC0 /* puff.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9943EF2E168D94F800B12BC0 /* puff.plist */; };
+		9943EF33168D9A0200B12BC0 /* ball_rs@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9943EF31168D9A0200B12BC0 /* ball_rs@2x.png */; };
+		9943EF34168D9A0200B12BC0 /* cat_rs@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9943EF32168D9A0200B12BC0 /* cat_rs@2x.png */; };
 		995978B81616D62300F7B4C2 /* player.plist in Resources */ = {isa = PBXBuildFile; fileRef = 995978B71616D62300F7B4C2 /* player.plist */; };
 		9959EC0E1629900000D18089 /* redGalaxy2.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9959EC0D1629900000D18089 /* redGalaxy2.plist */; };
 		9959EC111629903300D18089 /* player2.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9959EC101629903300D18089 /* player2.plist */; };
@@ -119,6 +122,9 @@
 		992BFB60162036DF00F38D41 /* intro.aifc */ = {isa = PBXFileReference; lastKnownFileType = file; path = intro.aifc; sourceTree = "<group>"; };
 		992BFB6916203B1900F38D41 /* GameManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameManager.h; sourceTree = "<group>"; };
 		992BFB6A16203B1900F38D41 /* GameManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameManager.m; sourceTree = "<group>"; };
+		9943EF2E168D94F800B12BC0 /* puff.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = puff.plist; sourceTree = "<group>"; };
+		9943EF31168D9A0200B12BC0 /* ball_rs@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ball_rs@2x.png"; sourceTree = "<group>"; };
+		9943EF32168D9A0200B12BC0 /* cat_rs@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cat_rs@2x.png"; sourceTree = "<group>"; };
 		995978B71616D62300F7B4C2 /* player.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = player.plist; sourceTree = "<group>"; };
 		9959EC0D1629900000D18089 /* redGalaxy2.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = redGalaxy2.plist; sourceTree = "<group>"; };
 		9959EC101629903300D18089 /* player2.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = player2.plist; sourceTree = "<group>"; };
@@ -412,6 +418,8 @@
 		DCC1A39413A94F1A005BD75D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9943EF31168D9A0200B12BC0 /* ball_rs@2x.png */,
+				9943EF32168D9A0200B12BC0 /* cat_rs@2x.png */,
 				99029E4C168AE4F40062BE13 /* ball_rs.png */,
 				99029E4E168AE4FE0062BE13 /* cat_rs.png */,
 				99029E50168AE5090062BE13 /* icons.plist */,
@@ -428,6 +436,7 @@
 				99E4124916298CDC007E6DED /* redGalaxy3.plist */,
 				992BFB41161A568600F38D41 /* rgbGalaxy.plist */,
 				99CC0FA516178E3E0047CF43 /* explode.plist */,
+				9943EF2E168D94F800B12BC0 /* puff.plist */,
 				99CC0FAE1617BCC50047CF43 /* bang.plist */,
 				995978B71616D62300F7B4C2 /* player.plist */,
 				9959EC101629903300D18089 /* player2.plist */,
@@ -587,6 +596,9 @@
 				99029E4D168AE4F40062BE13 /* ball_rs.png in Resources */,
 				99029E4F168AE4FE0062BE13 /* cat_rs.png in Resources */,
 				99029E51168AE5090062BE13 /* icons.plist in Resources */,
+				9943EF2F168D94F800B12BC0 /* puff.plist in Resources */,
+				9943EF33168D9A0200B12BC0 /* ball_rs@2x.png in Resources */,
+				9943EF34168D9A0200B12BC0 /* cat_rs@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
